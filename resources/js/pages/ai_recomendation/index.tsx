@@ -368,7 +368,7 @@ const KondisiUnsurHara=({last_data})=>{
                                 <div className="mt-10 bg-white dark:bg-accent rounded-2xl px-6 py-3 flex flex-col items-center justify-center">
                                     <span className="text-lg font-bold text-center py-1">Nitrogen (N)</span>
                                     <div className="w-full border-b dark:border-gray-500 mt-2"></div>
-                                    <div className="mt-5">Kekurangan N = <strong>{Math.max(0, skn(last_data))}</strong></div>
+                                    <div className="mt-5 text-center">Kekurangan N = <strong>{Math.max(0, skn(last_data))}</strong></div>
                                 </div>
                             </div>
                         </div>
@@ -391,7 +391,7 @@ const KondisiUnsurHara=({last_data})=>{
                                 <div className="mt-10 bg-white dark:bg-accent rounded-2xl px-6 py-3 flex flex-col items-center justify-center">
                                     <span className="text-lg font-bold text-center py-1">Fosfor (P)</span>
                                     <div className="w-full border-b dark:border-gray-500 mt-2"></div>
-                                    <div className="mt-5">Kekurangan P = <strong>{Math.max(0, skp(last_data))}</strong></div>
+                                    <div className="mt-5 text-center">Kekurangan P = <strong>{Math.max(0, skp(last_data))}</strong></div>
                                 </div>
                             </div>
                         </div>
@@ -414,7 +414,7 @@ const KondisiUnsurHara=({last_data})=>{
                                 <div className="mt-10 bg-white dark:bg-accent rounded-2xl px-6 py-3 flex flex-col items-center justify-center">
                                     <span className="text-lg font-bold text-center py-1">Kalium (K)</span>
                                     <div className="w-full border-b dark:border-gray-500 mt-2"></div>
-                                    <div className="mt-5">Kekurangan K = <strong>{Math.max(0, skk(last_data))}</strong></div>
+                                    <div className="mt-5 text-center">Kekurangan K = <strong>{Math.max(0, skk(last_data))}</strong></div>
                                 </div>
                             </div>
                         </div>
@@ -522,7 +522,7 @@ const KondisiTanahDanIklim=({last_data})=>{
                                 <div className="mt-10 bg-white dark:bg-accent rounded-2xl px-6 py-3 flex flex-col items-center justify-center">
                                     <span className="text-lg font-bold text-center py-1">pH Tanah</span>
                                     <div className="w-full border-b dark:border-gray-500 mt-2"></div>
-                                    <div className="mt-5">
+                                    <div className="mt-5 text-center">
                                         {kondisi_ph()}
                                     </div>
                                 </div>
@@ -541,7 +541,7 @@ const KondisiTanahDanIklim=({last_data})=>{
                                 <div className="mt-10 bg-white dark:bg-accent rounded-2xl px-6 py-3 flex flex-col items-center justify-center">
                                     <span className="text-lg font-bold text-center py-1">Soil EC</span>
                                     <div className="w-full border-b dark:border-gray-500 mt-2"></div>
-                                    <div className="mt-5">
+                                    <div className="mt-5 text-center">
                                         {kondisi_ec()}
                                     </div>
                                 </div>
@@ -560,7 +560,7 @@ const KondisiTanahDanIklim=({last_data})=>{
                                 <div className="mt-10 bg-white dark:bg-accent rounded-2xl px-6 py-3 flex flex-col items-center justify-center">
                                     <span className="text-lg font-bold text-center py-1">Curah Hujan</span>
                                     <div className="w-full border-b dark:border-gray-500 mt-2"></div>
-                                    <div className="mt-5">
+                                    <div className="mt-5 text-center">
                                         {kondisi_ch()}
                                     </div>
                                 </div>
@@ -579,7 +579,7 @@ const KondisiTanahDanIklim=({last_data})=>{
                                 <div className="mt-10 bg-white dark:bg-accent rounded-2xl px-6 py-3 flex flex-col items-center justify-center">
                                     <span className="text-lg font-bold text-center py-1">TDS</span>
                                     <div className="w-full border-b dark:border-gray-500 mt-2"></div>
-                                    <div className="mt-5">
+                                    <div className="mt-5 text-center">
                                         {kondisi_tds()}
                                     </div>
                                 </div>
@@ -598,7 +598,7 @@ const KondisiTanahDanIklim=({last_data})=>{
                                 <div className="mt-10 bg-white dark:bg-accent rounded-2xl px-6 py-3 flex flex-col items-center justify-center">
                                     <span className="text-lg font-bold text-center py-1">Humidity</span>
                                     <div className="w-full border-b dark:border-gray-500 mt-2"></div>
-                                    <div className="mt-5">
+                                    <div className="mt-5 text-center">
                                         {kondisi_h()}
                                     </div>
                                 </div>
@@ -617,7 +617,7 @@ const KondisiTanahDanIklim=({last_data})=>{
                                 <div className="mt-10 bg-white dark:bg-accent rounded-2xl px-6 py-3 flex flex-col items-center justify-center">
                                     <span className="text-lg font-bold text-center py-1">Temperature</span>
                                     <div className="w-full border-b dark:border-gray-500 mt-2"></div>
-                                    <div className="mt-5">
+                                    <div className="mt-5 text-center">
                                         {kondisi_t()}
                                     </div>
                                 </div>
@@ -709,7 +709,7 @@ const DosisPupukPerTanaman=({last_data, lahan, setFilter, filter})=>{
                                                 <strong>46% N</strong>
                                             </div>
                                             <div className="w-full border-b dark:border-gray-500 mt-2"></div>
-                                            <div className="mt-5">Dosis Pupuk Urea = <strong>{dosis_urea(last_data)} gram</strong> per tanaman</div>
+                                            <div className="mt-5 text-center">Dosis Pupuk Urea = <strong>{dosis_urea(last_data)} gram</strong> per tanaman</div>
                                         </div>
                                     </div>
                                 </div>
@@ -729,7 +729,7 @@ const DosisPupukPerTanaman=({last_data, lahan, setFilter, filter})=>{
                                                 <strong>36% P₂O₅ = 16% P</strong>
                                             </div>
                                             <div className="w-full border-b dark:border-gray-500 mt-2"></div>
-                                            <div className="mt-5">Dosis SP-36 = <strong>{dosis_sp36(last_data)} gram</strong> per tanaman</div>
+                                            <div className="mt-5 text-center">Dosis SP-36 = <strong>{dosis_sp36(last_data)} gram</strong> per tanaman</div>
                                         </div>
                                     </div>
                                 </div>
@@ -749,7 +749,7 @@ const DosisPupukPerTanaman=({last_data, lahan, setFilter, filter})=>{
                                                 <strong>60% K₂O = 50% K</strong>
                                             </div>
                                             <div className="w-full border-b dark:border-gray-500 mt-2"></div>
-                                            <div className="mt-5">Dosis KCL = <strong>{dosis_kcl(last_data)} gram</strong> per tanaman</div>
+                                            <div className="mt-5 text-center">Dosis KCL = <strong>{dosis_kcl(last_data)} gram</strong> per tanaman</div>
                                         </div>
                                     </div>
                                 </div>
