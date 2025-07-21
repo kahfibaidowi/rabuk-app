@@ -784,7 +784,7 @@ const DosisPupukPerTanaman=({last_data, lahan, setFilter, filter})=>{
                                 <strong className="text-lg leading-6">Pupuk sesuai data, bukan kira-kira. Dengan pupuk sekarang, semua jadi otomatis dan akurat!</strong>
                                 
                                 <Formik
-                                    initialValues={{urea:true, sp36:true,kcl:true, jumlah_tanaman:lahan.data.data.jumlah_tanaman}}
+                                    initialValues={{urea:true, sp36:false,kcl:false, jumlah_tanaman:lahan.data.data.jumlah_tanaman}}
                                     onSubmit={(values, actions)=>{
                                         const new_lahan=lahan.data.data
                                         const new_values=Object.assign({}, values, {
@@ -809,7 +809,7 @@ const DosisPupukPerTanaman=({last_data, lahan, setFilter, filter})=>{
                                                 <Label className="bg-white border-white flex items-start gap-3 rounded-lg border p-3 py-2.5 has-[[aria-checked=true]]:border-orange-600 has-[[aria-checked=true]]:bg-orange-400 dark:has-[[aria-checked=true]]:border-orange-600 dark:has-[[aria-checked=true]]:bg-orange-400">
                                                     <Checkbox
                                                         id="toggle-2"
-                                                        defaultChecked
+                                                        defaultChecked={formik.values.urea}
                                                         className="data-[state=checked]:border-green-600 data-[state=checked]:bg-green-600 data-[state=checked]:text-white dark:data-[state=checked]:border-green-700 dark:data-[state=checked]:bg-green-700"
                                                         onCheckedChange={e=>formik.setFieldValue("urea", e)}
                                                     />
@@ -822,7 +822,8 @@ const DosisPupukPerTanaman=({last_data, lahan, setFilter, filter})=>{
                                                 <Label className="bg-white border-white flex items-start gap-3 rounded-lg border p-3 py-2.5 has-[[aria-checked=true]]:border-orange-600 has-[[aria-checked=true]]:bg-orange-400 dark:has-[[aria-checked=true]]:border-orange-600 dark:has-[[aria-checked=true]]:bg-orange-400">
                                                     <Checkbox
                                                         id="toggle-2"
-                                                        defaultChecked
+                                                        defaultChecked={formik.values.sp36}
+                                                        disabled
                                                         className="data-[state=checked]:border-green-600 data-[state=checked]:bg-green-600 data-[state=checked]:text-white dark:data-[state=checked]:border-green-700 dark:data-[state=checked]:bg-green-700"
                                                         onCheckedChange={e=>formik.setFieldValue("sp36", e)}
                                                     />
@@ -835,7 +836,8 @@ const DosisPupukPerTanaman=({last_data, lahan, setFilter, filter})=>{
                                                 <Label className="bg-white border-white flex items-start gap-3 rounded-lg border p-3 py-2.5 has-[[aria-checked=true]]:border-orange-600 has-[[aria-checked=true]]:bg-orange-400 dark:has-[[aria-checked=true]]:border-orange-600 dark:has-[[aria-checked=true]]:bg-orange-400">
                                                     <Checkbox
                                                         id="toggle-2"
-                                                        defaultChecked
+                                                        defaultChecked={formik.values.kcl}
+                                                        disabled
                                                         className="data-[state=checked]:border-green-600 data-[state=checked]:bg-green-600 data-[state=checked]:text-white dark:data-[state=checked]:border-green-700 dark:data-[state=checked]:bg-green-700"
                                                         onCheckedChange={e=>formik.setFieldValue("kcl", e)}
                                                     />

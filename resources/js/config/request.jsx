@@ -111,7 +111,7 @@ export const lahan_detail_request={
     }
 }
 
-//LAHAN DETAIL
+//PUPUK
 export const pupuk_request={
     gets:async(params={})=>{
         return await axios.get("/api/pupuk", {
@@ -128,7 +128,7 @@ export const pupuk_request={
     delete:async(id)=>{
         return await axios.delete(`/api/pupuk/${id}`).then(res=>res.data)
     },
-    update:async(id, params)=>{
-        return await axios.put(`/api/pupuk/${id}`, params).then(res=>res.data)
-    }
+    simulate_rabuk:async(params)=>{
+        return await axios.post("/api/pupuk/simulate_rabuk", params).then(res=>res.data)
+    },
 }
