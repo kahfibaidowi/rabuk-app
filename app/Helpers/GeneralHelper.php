@@ -162,7 +162,10 @@ class GeneralHelper{
 
         //laju air & debit max air
         $laju_air=sqrt(2*9.81*$tinggi_tandon);
-        $luas_penampang_bukaan_mv_penuh=
+        $luas_penampang_bukaan_mv_penuh=(3.14*$diameter_bukaan_mv_max*$diameter_bukaan_mv_max)/4;
+        $debit_max=$luas_penampang_bukaan_mv_penuh*$laju_air*1000; #liter/s
+
+        //-----------------------------
 
         //params
         $pupuk=$req['berat_rabuk']; #gram pupuk yang akan dikonversi ke cair
