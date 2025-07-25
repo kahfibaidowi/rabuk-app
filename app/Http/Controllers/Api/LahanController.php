@@ -36,7 +36,13 @@ class LahanController extends Controller
             'tgl_tanam'     =>"required|date_format:Y-m-d",
             'icon'          =>"required",
             'modbus_url'    =>"required",
-            'modbus_port'   =>"required"
+            'modbus_port'   =>"required",
+            'urea_gram'     =>"required|integer|min:0",
+            'urea_v_liter'  =>"required|integer|min:0",
+            'sp36_gram'     =>"required|integer|min:0",
+            'sp36_v_liter'  =>"required|integer|min:0",
+            'kcl_gram'      =>"required|integer|min:0",
+            'kcl_v_liter'   =>"required|integer|min:0",
         ]);
         if($validation->fails()){
             return response()->json([
@@ -59,7 +65,13 @@ class LahanController extends Controller
                 'tgl_tanam'     =>$req['tgl_tanam'],
                 'icon'          =>$req['icon'],
                 'modbus_url'    =>$req['modbus_url'],
-                'modbus_port'   =>$req['modbus_port']
+                'modbus_port'   =>$req['modbus_port'],
+                'urea_gram'     =>$req['urea_gram'],
+                'urea_v_liter'  =>$req['urea_v_liter'],
+                'sp36_gram'     =>$req['sp36_gram'],
+                'sp36_v_liter'  =>$req['sp36_v_liter'],
+                'kcl_gram'      =>$req['kcl_gram'],
+                'kcl_v_liter'   =>$req['kcl_v_liter']
             ]);
         });
 
@@ -90,7 +102,13 @@ class LahanController extends Controller
             'jumlah_tanaman'=>"required|integer|min:0",
             'icon'          =>"required",
             'modbus_url'    =>"required",
-            'modbus_port'   =>"required"
+            'modbus_port'   =>"required",
+            'urea_gram'     =>"required|integer|min:0",
+            'urea_v_liter'  =>"required|integer|min:0",
+            'sp36_gram'     =>"required|integer|min:0",
+            'sp36_v_liter'  =>"required|integer|min:0",
+            'kcl_gram'      =>"required|integer|min:0",
+            'kcl_v_liter'   =>"required|integer|min:0",
         ]);
         if($validation->fails()){
             return response()->json([
@@ -107,7 +125,13 @@ class LahanController extends Controller
                 'jumlah_tanaman'=>$req['jumlah_tanaman'],
                 'icon'          =>$req['icon'],
                 'modbus_url'    =>$req['modbus_url'],
-                'modbus_port'   =>$req['modbus_port']
+                'modbus_port'   =>$req['modbus_port'],
+                'urea_gram'     =>$req['urea_gram'],
+                'urea_v_liter'  =>$req['urea_v_liter'],
+                'sp36_gram'     =>$req['sp36_gram'],
+                'sp36_v_liter'  =>$req['sp36_v_liter'],
+                'kcl_gram'      =>$req['kcl_gram'],
+                'kcl_v_liter'   =>$req['kcl_v_liter']
             ];
 
             LahanModel::where("id", $req['id'])

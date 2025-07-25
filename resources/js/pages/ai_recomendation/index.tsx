@@ -358,7 +358,7 @@ const KondisiUnsurHara=({last_data})=>{
                                         })}
                                     >
                                         <span className='text-xl font-bold text-center'>
-                                            {skn(last_data)>0?"Kekurangan":"Kelebihan"} {Math.abs(skn(last_data))}
+                                            {skn(last_data)>0?"Kekurangan":"Kelebihan"} {Math.abs(skn(last_data)).toFixed(2)*1}
                                         </span>
                                     </div>
                                     <div className="w-36 h-36 bg-white dark:bg-accent rounded-full shadow-lg px-5 flex items-center">
@@ -368,7 +368,7 @@ const KondisiUnsurHara=({last_data})=>{
                                 <div className="mt-10 bg-white dark:bg-accent rounded-2xl px-6 py-3 flex flex-col items-center justify-center">
                                     <span className="text-lg font-bold text-center py-1">Nitrogen (N)</span>
                                     <div className="w-full border-b dark:border-gray-500 mt-2"></div>
-                                    <div className="mt-5 text-center">Kekurangan N = <strong>{Math.max(0, skn(last_data))}</strong></div>
+                                    <div className="mt-5 text-center">Kekurangan N = <strong>{Math.max(0, skn(last_data)).toFixed(2)*1}</strong></div>
                                 </div>
                             </div>
                         </div>
@@ -381,7 +381,7 @@ const KondisiUnsurHara=({last_data})=>{
                                         })}
                                     >
                                         <span className='text-xl font-bold text-center'>
-                                            {skp(last_data)>0?"Kekurangan":"Kelebihan"} {Math.abs(skp(last_data))}
+                                            {skp(last_data)>0?"Kekurangan":"Kelebihan"} {Math.abs(skp(last_data)).toFixed(2)*1}
                                         </span>
                                     </div>
                                     <div className="w-36 h-36 bg-white dark:bg-accent rounded-full shadow-lg px-5 flex items-center">
@@ -391,7 +391,7 @@ const KondisiUnsurHara=({last_data})=>{
                                 <div className="mt-10 bg-white dark:bg-accent rounded-2xl px-6 py-3 flex flex-col items-center justify-center">
                                     <span className="text-lg font-bold text-center py-1">Fosfor (P)</span>
                                     <div className="w-full border-b dark:border-gray-500 mt-2"></div>
-                                    <div className="mt-5 text-center">Kekurangan P = <strong>{Math.max(0, skp(last_data))}</strong></div>
+                                    <div className="mt-5 text-center">Kekurangan P = <strong>{Math.max(0, skp(last_data)).toFixed(2)*1}</strong></div>
                                 </div>
                             </div>
                         </div>
@@ -404,7 +404,7 @@ const KondisiUnsurHara=({last_data})=>{
                                         })}
                                     >
                                         <span className='text-xl font-bold text-center'>
-                                            {skk(last_data)>0?"Kekurangan":"Kelebihan"} {Math.abs(skk(last_data))}
+                                            {skk(last_data)>0?"Kekurangan":"Kelebihan"} {Math.abs(skk(last_data)).toFixed(2)*1}
                                         </span>
                                     </div>
                                     <div className="w-36 h-36 bg-white dark:bg-accent rounded-full shadow-lg px-5 flex items-center">
@@ -414,7 +414,7 @@ const KondisiUnsurHara=({last_data})=>{
                                 <div className="mt-10 bg-white dark:bg-accent rounded-2xl px-6 py-3 flex flex-col items-center justify-center">
                                     <span className="text-lg font-bold text-center py-1">Kalium (K)</span>
                                     <div className="w-full border-b dark:border-gray-500 mt-2"></div>
-                                    <div className="mt-5 text-center">Kekurangan K = <strong>{Math.max(0, skk(last_data))}</strong></div>
+                                    <div className="mt-5 text-center">Kekurangan K = <strong>{Math.max(0, skk(last_data)).toFixed(2)*1}</strong></div>
                                 </div>
                             </div>
                         </div>
@@ -513,7 +513,7 @@ const KondisiTanahDanIklim=({last_data})=>{
                             <div className="rounded-2xl bg-emerald-200 p-5">
                                 <div className="flex items-center justify-between -mt-12">
                                     <div className='flex flex-col items-center justify-center px-6 py-2 w-24 lg:w-36 bg-emerald-600 text-white rounded-2xl'>
-                                        <span className='text-xl font-bold'>{last_data.soil_ph}</span>
+                                        <span className='text-xl font-bold'>{last_data.soil_ph.toFixed(2)*1}</span>
                                     </div>
                                     <div className="w-36 h-36 bg-white dark:bg-accent rounded-full shadow-lg px-2">
                                         <img src="/images/icon-3.png"/>
@@ -532,7 +532,7 @@ const KondisiTanahDanIklim=({last_data})=>{
                             <div className="rounded-2xl bg-yellow-100 p-5">
                                 <div className="flex items-center justify-between -mt-12">
                                     <div className='flex flex-col items-center justify-center px-6 py-2 w-24 lg:w-36 bg-yellow-600 text-white rounded-2xl'>
-                                        <span className='text-xl font-bold'>{last_data.soil_ec} dS/m</span>
+                                        <span className='text-xl font-bold'>{last_data.soil_ec.toFixed(2)*1} dS/m</span>
                                     </div>
                                     <div className="w-36 h-36 bg-white dark:bg-accent rounded-full shadow-lg px-2">
                                         <img src="/images/icon-1.png"/>
@@ -551,7 +551,7 @@ const KondisiTanahDanIklim=({last_data})=>{
                             <div className="rounded-2xl bg-blue-200 p-5">
                                 <div className="flex items-center justify-between -mt-12">
                                     <div className='flex flex-col items-center justify-center px-6 py-2 w-24 lg:w-36 bg-blue-600 text-white rounded-2xl'>
-                                        <span className='text-xl font-bold'>{last_data.curah_hujan} mm/minggu</span>
+                                        <span className='text-xl font-bold'>{last_data.curah_hujan.toFixed(2)*1} mm/minggu</span>
                                     </div>
                                     <div className="w-36 h-36 bg-white dark:bg-accent rounded-full shadow-lg px-2">
                                         <img src="/images/icon-2.png"/>
@@ -570,7 +570,7 @@ const KondisiTanahDanIklim=({last_data})=>{
                             <div className="rounded-2xl bg-gray-200 p-5">
                                 <div className="flex items-center justify-between -mt-12">
                                     <div className='flex flex-col items-center justify-center px-6 py-2 w-24 lg:w-36 bg-gray-600 text-white rounded-2xl'>
-                                        <span className='text-xl font-bold'>{last_data.soil_tds} ppm</span>
+                                        <span className='text-xl font-bold'>{last_data.soil_tds.toFixed(2)*1} ppm</span>
                                     </div>
                                     <div className="w-36 h-36 flex items-center justify-center bg-white dark:bg-accent rounded-full shadow-lg px-2">
                                         <span className="font-bold text-2xl">TDS</span>
@@ -589,7 +589,7 @@ const KondisiTanahDanIklim=({last_data})=>{
                             <div className="rounded-2xl bg-gray-200 p-5">
                                 <div className="flex items-center justify-between -mt-12">
                                     <div className='flex flex-col items-center justify-center px-6 py-2 w-24 lg:w-36 bg-gray-600 text-white rounded-2xl'>
-                                        <span className='text-xl font-bold'>{last_data.soil_h}%</span>
+                                        <span className='text-xl font-bold'>{last_data.soil_h.toFixed(2)*1}%</span>
                                     </div>
                                     <div className="w-36 h-36 flex items-center justify-center bg-white dark:bg-accent rounded-full shadow-lg px-2">
                                         <span className="font-bold text-2xl">H</span>
@@ -608,7 +608,7 @@ const KondisiTanahDanIklim=({last_data})=>{
                             <div className="rounded-2xl bg-gray-200 p-5">
                                 <div className="flex items-center justify-between -mt-12">
                                     <div className='flex flex-col items-center justify-center px-6 py-2 w-24 lg:w-36 bg-gray-600 text-white rounded-2xl'>
-                                        <span className='text-xl font-bold'>{last_data.soil_t} &#8451;</span>
+                                        <span className='text-xl font-bold'>{last_data.soil_t.toFixed(2)*1} &#8451;</span>
                                     </div>
                                     <div className="w-36 h-36 flex items-center justify-center bg-white dark:bg-accent rounded-full shadow-lg px-2">
                                         <span className="font-bold text-2xl">T</span>
@@ -698,7 +698,7 @@ const DosisPupukPerTanaman=({last_data, lahan, setFilter, filter})=>{
                                         <div className="flex flex-col items-center justify-center -mt-12">
                                             <div className="w-36 h-36 bg-white dark:bg-accent rounded-full shadow-lg px-2 flex items-center justify-center">
                                                 <span className="text-center text-xl font-bold">
-                                                    {dosis_urea(last_data)}<br/>gram
+                                                    {dosis_urea(last_data).toFixed(2)*1}<br/>gram
                                                 </span>
                                             </div>
                                             <span className="text-xl font-bold mt-5 text-gray-800">Urea</span>
@@ -718,7 +718,7 @@ const DosisPupukPerTanaman=({last_data, lahan, setFilter, filter})=>{
                                         <div className="flex flex-col items-center justify-center -mt-12">
                                             <div className="w-36 h-36 bg-white dark:bg-accent rounded-full shadow-lg px-2 flex items-center justify-center">
                                                 <span className="text-center text-xl font-bold">
-                                                    {dosis_sp36(last_data)}<br/>gram
+                                                    {dosis_sp36(last_data).toFixed(2)*1}<br/>gram
                                                 </span>
                                             </div>
                                             <span className="text-xl font-bold mt-5 text-gray-800">SP-36</span>
@@ -738,7 +738,7 @@ const DosisPupukPerTanaman=({last_data, lahan, setFilter, filter})=>{
                                         <div className="flex flex-col items-center justify-center -mt-12">
                                             <div className="w-36 h-36 bg-white dark:bg-accent rounded-full shadow-lg px-2 flex items-center justify-center">
                                                 <span className="text-center text-xl font-bold">
-                                                    {dosis_kcl(last_data)}<br/>gram
+                                                    {dosis_kcl(last_data).toFixed(2)*1}<br/>gram
                                                 </span>
                                             </div>
                                             <span className="text-xl font-bold mt-5 text-gray-800">KCL</span>
@@ -919,21 +919,21 @@ const DataPupuk=({dataSource, filter, setFilter})=>{
                                         headerClassName:"w-[150px]",
                                         header:"Dosis Urea",
                                         renderItem:(item)=>(
-                                            <>{!_.isNull(item.dosis_urea)?<><strong>{item.dosis_urea*item.jumlah_tanaman}</strong> gram</>:<XCircle className="text-red-600"/>}</>
+                                            <>{!_.isNull(item.dosis_urea)?<><strong>{(item.dosis_urea*item.jumlah_tanaman).toFixed(2)*1}</strong> gram</>:<XCircle className="text-red-600"/>}</>
                                         )
                                     },
                                     {
                                         headerClassName:"w-[150px]",
                                         header:"Dosis SP-36",
                                         renderItem:(item)=>(
-                                            <>{!_.isNull(item.dosis_sp36)?<><strong>{item.dosis_sp36*item.jumlah_tanaman}</strong> gram</>:<XCircle className="text-red-600"/>}</>
+                                            <>{!_.isNull(item.dosis_sp36)?<><strong>{(item.dosis_sp36*item.jumlah_tanaman).toFixed(2)*1}</strong> gram</>:<XCircle className="text-red-600"/>}</>
                                         )
                                     },
                                     {
                                         headerClassName:"w-[150px]",
                                         header:"Dosis KCl",
                                         renderItem:(item)=>(
-                                            <>{!_.isNull(item.dosis_kcl)?<><strong>{item.dosis_kcl*item.jumlah_tanaman}</strong> gram</>:<XCircle className="text-red-600"/>}</>
+                                            <>{!_.isNull(item.dosis_kcl)?<><strong>{(item.dosis_kcl*item.jumlah_tanaman).toFixed(2)*1}</strong> gram</>:<XCircle className="text-red-600"/>}</>
                                         )
                                     },
                                     {

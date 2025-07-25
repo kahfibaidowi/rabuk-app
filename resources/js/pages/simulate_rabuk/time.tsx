@@ -83,14 +83,7 @@ export default function Page(props) {
     const [form_input, setFormInput]=useState({
         modbus_url:"127.0.0.1",
         modbus_port:"502",
-        urea_gram:"",
-        urea_v_liter:"",
-        sp36_gram:"",
-        sp36_v_liter:"",
-        kcl_gram:"",
-        kcl_v_liter:"",
-        rabuk:"urea",
-        berat_rabuk:""
+        time:""
     })
     const [response, setResponse]=useState({
         waktu_tunggu:"",
@@ -103,7 +96,7 @@ export default function Page(props) {
 
     //DATA/MUTATION
     const simulate_data=useMutation({
-            mutationFn:params=>pupuk_request.simulate_rabuk(params),
+            mutationFn:params=>pupuk_request.simulate_time(params),
             onError:err=>{
                 if(err.response.data?.error=="VALIDATION_ERROR")
                     toast.error(err.response.data.data, {position:"bottom-center"})
@@ -178,8 +171,7 @@ export default function Page(props) {
                                 yup.object().shape({
                                     modbus_url:yup.string().required(),
                                     modbus_port:yup.string().required(),
-                                    berat_rabuk:yup.string().required(),
-                                    rabuk:yup.string().required()
+                                    time:yup.string().required()
                                 })
                             }
                             enableReinitialize
@@ -209,110 +201,15 @@ export default function Page(props) {
                                         />
                                     </div>
                                     <div className="grid grid-cols-5 items-center gap-2">
-                                        <Label className="col-span-2">Rabuk</Label>
-                                        <ReactSelect
-                                            options={options_rabuk()}
-                                            value={options_rabuk().find(f=>f.value==formik.values.rabuk)}
-                                            onChange={e=>{
-                                                formik.setFieldValue("rabuk", e.value)
-                                            }}
-                                            className="grow mb-1 col-span-3"
+                                        <Label className="col-span-2">Waktu (detik)</Label>
+                                        <NumericFormat 
+                                            value={formik.values.time} 
+                                            onValueChange={(values)=>formik.setFieldValue("time", values.value)}
+                                            customInput={Input} 
+                                            thousandSeparator 
+                                            className="pr-10 w-full col-span-3" 
+                                            decimalScale={1}
                                         />
-                                    </div>
-                                    {formik.values.rabuk=="urea"&&
-                                    <>
-                                        <div className="grid grid-cols-5 items-center gap-2">
-                                            <Label className="col-span-2">Urea gram</Label>
-                                            <NumericFormat 
-                                                value={formik.values.urea_gram} 
-                                                onValueChange={(values)=>formik.setFieldValue("urea_gram", values.value)}
-                                                customInput={Input} 
-                                                thousandSeparator 
-                                                className="pr-10 w-full col-span-3" 
-                                                decimalScale={0}
-                                            />
-                                        </div>
-                                        <div className="grid grid-cols-5 items-center gap-2">
-                                            <Label className="col-span-2">Urea volume/liter</Label>
-                                            <NumericFormat 
-                                                value={formik.values.urea_v_liter} 
-                                                onValueChange={(values)=>formik.setFieldValue("urea_v_liter", values.value)}
-                                                customInput={Input} 
-                                                thousandSeparator 
-                                                className="pr-10 w-full col-span-3" 
-                                                decimalScale={0}
-                                            />
-                                        </div>
-                                    </>
-                                    }
-                                    {formik.values.rabuk=="sp36"&&
-                                    <>
-                                        <div className="grid grid-cols-5 items-center gap-2">
-                                            <Label className="col-span-2">SP-36 gram</Label>
-                                            <NumericFormat 
-                                                value={formik.values.sp36_gram} 
-                                                onValueChange={(values)=>formik.setFieldValue("sp36_gram", values.value)}
-                                                customInput={Input} 
-                                                thousandSeparator 
-                                                className="pr-10 w-full col-span-3" 
-                                                decimalScale={0}
-                                            />
-                                        </div>
-                                        <div className="grid grid-cols-5 items-center gap-2">
-                                            <Label className="col-span-2">SP-36 volume/liter</Label>
-                                            <NumericFormat 
-                                                value={formik.values.sp36_v_liter} 
-                                                onValueChange={(values)=>formik.setFieldValue("sp36_v_liter", values.value)}
-                                                customInput={Input} 
-                                                thousandSeparator 
-                                                className="pr-10 w-full col-span-3" 
-                                                decimalScale={0}
-                                            />
-                                        </div>
-                                    </>
-                                    }
-                                    {formik.values.rabuk=="kcl"&&
-                                    <>
-                                        <div className="grid grid-cols-5 items-center gap-2">
-                                            <Label className="col-span-2">KCl gram</Label>
-                                            <NumericFormat 
-                                                value={formik.values.kcl_gram} 
-                                                onValueChange={(values)=>formik.setFieldValue("kcl_gram", values.value)}
-                                                customInput={Input} 
-                                                thousandSeparator 
-                                                className="pr-10 w-full col-span-3" 
-                                                decimalScale={0}
-                                            />
-                                        </div>
-                                        <div className="grid grid-cols-5 items-center gap-2">
-                                            <Label className="col-span-2">KCl volume/liter</Label>
-                                            <NumericFormat 
-                                                value={formik.values.kcl_v_liter} 
-                                                onValueChange={(values)=>formik.setFieldValue("kcl_v_liter", values.value)}
-                                                customInput={Input} 
-                                                thousandSeparator 
-                                                className="pr-10 w-full col-span-3" 
-                                                decimalScale={0}
-                                            />
-                                        </div>
-                                    </>
-                                    }
-                                    <div className="grid grid-cols-5 items-center gap-2">
-                                        <Label className="col-span-2">Berat Pupuk yang akan Disimulasi</Label>
-                                        <div className="relative flex col-span-3">
-                                            <div className="absolute inset-y-0 end-0 flex items-center pe-3.5 pointer-events-none text-sm">
-                                                gram
-                                            </div>
-                                            
-                                            <NumericFormat 
-                                                value={formik.values.berat_rabuk} 
-                                                onValueChange={(values)=>formik.setFieldValue("berat_rabuk", values.value)}
-                                                customInput={Input} 
-                                                thousandSeparator 
-                                                className="pr-10 w-full" 
-                                                decimalScale={0}
-                                            />
-                                        </div>
                                     </div>
                                     <div className="grid grid-cols-5 items-start gap-2 mt-5">
                                         <Label className="col-span-2"></Label>

@@ -131,4 +131,10 @@ export const pupuk_request={
     simulate_rabuk:async(params)=>{
         return await axios.post("/api/pupuk/simulate_rabuk", params).then(res=>res.data)
     },
+    simulate_time:async(params)=>{
+        return await axios.post("/api/pupuk/simulate_time", params).then(res=>res.data)
+    },
+    simulate_weight:async(params)=>{
+        return await axios.post("/api/pupuk/simulate_weight", params).then(res=>res.data)
+    },
 }

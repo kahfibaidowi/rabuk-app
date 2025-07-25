@@ -136,7 +136,13 @@ export default function Page(props) {
                                     jumlah_tanaman:yup.string().required(),
                                     icon:yup.string().required(),
                                     modbus_url:yup.string().required(),
-                                    modbus_port:yup.string().required()
+                                    modbus_port:yup.string().required(),
+                                    urea_gram:yup.string().required(),
+                                    urea_v_liter:yup.string().required(),
+                                    sp36_gram:yup.string().required(),
+                                    sp36_v_liter:yup.string().required(),
+                                    kcl_gram:yup.string().required(),
+                                    kcl_v_liter:yup.string().required()
                                 })
                             }
                             enableReinitialize
@@ -238,6 +244,72 @@ export default function Page(props) {
                                             value={formik.values.modbus_port}
                                             onChange={formik.handleChange}
                                             maxLength={200}
+                                        />
+                                    </div>
+                                    <div className="grid grid-cols-4 items-center gap-4">
+                                        <Label>Urea gram</Label>
+                                        <NumericFormat 
+                                            value={formik.values.urea_gram} 
+                                            onValueChange={(values)=>formik.setFieldValue("urea_gram", values.value)}
+                                            customInput={Input} 
+                                            thousandSeparator 
+                                            className="pr-10 w-full col-span-3" 
+                                            decimalScale={0}
+                                        />
+                                    </div>
+                                    <div className="grid grid-cols-4 items-center gap-4">
+                                        <Label>Urea volume/liter</Label>
+                                        <NumericFormat 
+                                            value={formik.values.urea_v_liter} 
+                                            onValueChange={(values)=>formik.setFieldValue("urea_v_liter", values.value)}
+                                            customInput={Input} 
+                                            thousandSeparator 
+                                            className="pr-10 w-full col-span-3" 
+                                            decimalScale={0}
+                                        />
+                                    </div>
+                                    <div className="grid grid-cols-4 items-center gap-4">
+                                        <Label>SP-36 gram</Label>
+                                        <NumericFormat 
+                                            value={formik.values.sp36_gram} 
+                                            onValueChange={(values)=>formik.setFieldValue("sp36_gram", values.value)}
+                                            customInput={Input} 
+                                            thousandSeparator 
+                                            className="pr-10 w-full col-span-3" 
+                                            decimalScale={0}
+                                        />
+                                    </div>
+                                    <div className="grid grid-cols-4 items-center gap-4">
+                                        <Label>SP-36 volume/liter</Label>
+                                        <NumericFormat 
+                                            value={formik.values.sp36_v_liter} 
+                                            onValueChange={(values)=>formik.setFieldValue("sp36_v_liter", values.value)}
+                                            customInput={Input} 
+                                            thousandSeparator 
+                                            className="pr-10 w-full col-span-3" 
+                                            decimalScale={0}
+                                        />
+                                    </div>
+                                    <div className="grid grid-cols-4 items-center gap-4">
+                                        <Label>KCl gram</Label>
+                                        <NumericFormat 
+                                            value={formik.values.kcl_gram} 
+                                            onValueChange={(values)=>formik.setFieldValue("kcl_gram", values.value)}
+                                            customInput={Input} 
+                                            thousandSeparator 
+                                            className="pr-10 w-full col-span-3" 
+                                            decimalScale={0}
+                                        />
+                                    </div>
+                                    <div className="grid grid-cols-4 items-center gap-4">
+                                        <Label>KCl volume/liter</Label>
+                                        <NumericFormat 
+                                            value={formik.values.kcl_v_liter} 
+                                            onValueChange={(values)=>formik.setFieldValue("kcl_v_liter", values.value)}
+                                            customInput={Input} 
+                                            thousandSeparator 
+                                            className="pr-10 w-full col-span-3" 
+                                            decimalScale={0}
                                         />
                                     </div>
                                     <div className="grid grid-cols-4 items-center gap-4 mt-10">

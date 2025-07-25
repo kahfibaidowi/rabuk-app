@@ -77,6 +77,26 @@ class DashboardController extends Controller
     {
         $req=$request->all();
 
-        return Inertia::render('simulate_rabuk/index', []);
+        return Inertia::render('simulate_rabuk/index', [
+            'lahan_id'  =>isset($req['lahan_id'])?trim($req['lahan_id']):""
+        ]);
+    }
+
+    public function simulate_time(Request $request): Response
+    {
+        $req=$request->all();
+
+        return Inertia::render('simulate_rabuk/time', [
+            'lahan_id'  =>isset($req['lahan_id'])?trim($req['lahan_id']):""
+        ]);
+    }
+
+    public function simulate_weight(Request $request): Response
+    {
+        $req=$request->all();
+
+        return Inertia::render('simulate_rabuk/weight', [
+            'lahan_id'  =>isset($req['lahan_id'])?trim($req['lahan_id']):""
+        ]);
     }
 }
