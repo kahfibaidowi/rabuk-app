@@ -50,7 +50,7 @@ const WidgetGaugeTanah=(props)=>{
                                 "bg-yellow-500":props.data.color=="yellow"
                             })}
                         >
-                            <span className='text-2xl font-bold text-white'>{props.data.value}</span>
+                            <span className='text-2xl font-bold text-white'>{Math.max(0, props.data.value).toFixed(2)*1}</span>
                         </div>
                     </div>
                     <div className='relative ml-auto'>
