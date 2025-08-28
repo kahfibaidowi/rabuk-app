@@ -237,11 +237,13 @@ class PupukController extends Controller
         $options=[
             'modbus_url'    =>$req['modbus_url'],
             'modbus_port'   =>$req['modbus_port'],
+            'modbus_address'=>$req['modbus_address'],
             'berat_rabuk'   =>$req['berat_rabuk']
         ];
         $process_rabuk=GeneralHelper::process_mv_rabuk_time("urea", $options['berat_rabuk'], $options);
 
         return response()->json([
+            'status'        =>$process_rabuk['status'],
             'waktu_tunggu'  =>$process_rabuk['waktu_tunggu'],
             'waktu_tunggu_plus_tutup'   =>$process_rabuk['waktu_tunggu_plus_tutup'],
             'waktu_tunggu_simulasi' =>$process_rabuk['waktu_tunggu_simulasi']

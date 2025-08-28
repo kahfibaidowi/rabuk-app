@@ -17,6 +17,7 @@ class User extends Authenticatable
      *
      * @var list<string>
      */
+    protected $perPage=99999999999999999999;
     protected $fillable = [
         'name',
         'email',

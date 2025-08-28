@@ -10,6 +10,8 @@ use ModbusTcpClient\Packet\ModbusFunction\WriteMultipleRegistersRequest;
 use ModbusTcpClient\Packet\ModbusFunction\WriteMultipleRegistersResponse;
 use ModbusTcpClient\Packet\ModbusFunction\ReadHoldingRegistersRequest;
 use ModbusTcpClient\Packet\ModbusFunction\ReadHoldingRegistersResponse;
+use ModbusTcpClient\Packet\ModbusFunction\WriteSingleCoilRequest;
+use ModbusTcpClient\Packet\ModbusFunction\WriteSingleCoilResponse;
 use ModbusTcpClient\Composer\Read\ReadRegistersBuilder;
 use ModbusTcpClient\Packet\ResponseFactory;
 use ModbusTcpClient\Utils\Endian;
@@ -301,3 +303,54 @@ Route::get('/testing_rabuk_gram', function(){
     }
 });
 
+Route::get('/testing_coil', function(){
+    $waktu_buka=5;
+
+    //iot control modbus
+    Endian::$defaultEndian=Endian::BIG_ENDIAN;
+    $list=[
+        'modbus_url'    =>"127.0.0.1",
+        'modbus_port'   =>502
+    ];
+
+    $connection=BinaryStreamConnection::getBuilder()
+        ->setPort($list['modbus_port'])
+        ->setHost($list['modbus_url'])
+        ->setConnectTimeoutSec(5)
+        ->setWriteTimeoutSec(30)
+        ->setReadTimeoutSec(30)
+        ->build();
+
+    $startAddress=0;
+    $unitID=1;
+
+    $registers=true;
+    $packet=new WriteSingleCoilRequest($startAddress, $registers, $unitID);
+
+    $registers2=false;
+    $packet2=new WriteSingleCoilRequest($startAddress, $registers2, $unitID);
+
+    try {
+        $binaryData = $connection->connect();
+        $sleep=ceil($waktu_buka*1000*1000);
+
+        $result=$binaryData->sendAndReceive($packet);
+        $date_1=microtime(true)/1000;
+        usleep($sleep); //sleep
+
+        $result=$binaryData->sendAndReceive($packet2);
+        $date_2=microtime(true)/1000;
+
+        echo "sleep ".$date_1." - ".$date_2;
+        echo "<br/>waktu eksekusi program=".($date_2-$date_1)*1000;
+
+    }
+    catch(\Exception $exception) {
+        echo 'An exception occurred'."<br/>";
+        echo $exception->getMessage()."<br/>";
+        echo $exception->getTraceAsString()."<br/>";
+    }
+    finally{
+        $connection->close();
+    }
+});

@@ -5,6 +5,8 @@ namespace App\Helpers;
 use ModbusTcpClient\Network\BinaryStreamConnection;
 use ModbusTcpClient\Packet\ModbusFunction\WriteMultipleRegistersRequest;
 use ModbusTcpClient\Packet\ModbusFunction\WriteMultipleRegistersResponse;
+use ModbusTcpClient\Packet\ModbusFunction\WriteSingleCoilRequest;
+use ModbusTcpClient\Packet\ModbusFunction\WriteSingleCoilResponse;
 use ModbusTcpClient\Packet\ResponseFactory;
 use ModbusTcpClient\Utils\Endian;
 use ModbusTcpClient\Utils\Types;
@@ -310,84 +312,60 @@ class GeneralHelper{
     }
 
     public static function process_mv_rabuk_time($type="urea", $berat_rabuk, $options){
+        Endian::$defaultEndian=Endian::BIG_ENDIAN;
+
         //options params
         // $options=[
         //     'modbus_url',
         //     'modbus_port',
-        //     'urea_gram',
-        //     'urea_v_liter',
-        //     'sp36_gram',
-        //     'sp36_v_liter',
-        //     'kcl_gram',
-        //     'kcl_v_liter',
         // ];
 
 
         //-----------------------------
 
-        //params
-        $motor_dipilih=16;
-        $motor_tertutup=4;
-
         //variable
         $berat_rabuk=ceil($berat_rabuk);
 
         //waktu buka
-        $waktu_buka=4;
-        if($berat_rabuk<=45){
-            $waktu_buka=6;
+        $waktu_buka=0;
+        if($berat_rabuk<=100){
+            $waktu_buka=0.5;
         }
-        else if($berat_rabuk<=65){
-            $waktu_buka=7;
+        else if($berat_rabuk<=200){
+            $waktu_buka=1;
         }
-        else if($berat_rabuk<=95){
-            $waktu_buka=8;
-        }
-        else if($berat_rabuk<=145){
-            $waktu_buka=9;
-        }
-        else if($berat_rabuk<=240){
-            $waktu_buka=10;
-        }
-        else if($berat_rabuk<=350){
-            $waktu_buka=11;
-        }
-        else if($berat_rabuk<=450){
-            $waktu_buka=12;
-        }
-        else if($berat_rabuk<=500){
-            $waktu_buka=13;
+        else if($berat_rabuk<=400){
+            $waktu_buka=2;
         }
         else if($berat_rabuk<=650){
-            $waktu_buka=14;
+            $waktu_buka=3;
         }
-        else if($berat_rabuk<=850){
-            $waktu_buka=15;
+        else if($berat_rabuk<=800){
+            $waktu_buka=4;
         }
-        else if($berat_rabuk<=1050){
-            $waktu_buka=16;
+        else if($berat_rabuk<=1000){
+            $waktu_buka=5;
         }
-        else if($berat_rabuk<=1250){
-            $waktu_buka=17;
+        else if($berat_rabuk<=1350){
+            $waktu_buka=6;
         }
-        else if($berat_rabuk<=1490){
-            $waktu_buka=18;
+        else if($berat_rabuk<=1550){
+            $waktu_buka=7;
         }
-        else if($berat_rabuk<=1750){
-            $waktu_buka=19;
+        else if($berat_rabuk<=1800){
+            $waktu_buka=8;
         }
         else if($berat_rabuk<=2000){
-            $waktu_buka=20;
+            $waktu_buka=9;
         }
-        else if($berat_rabuk>2000){
-            $sisa=$berat_rabuk-2000;
-            $waktu_tambahan=$sisa/250;
-            $waktu_buka=round(20+$waktu_tambahan, 2)+0.01;
-        }
+        // else if($berat_rabuk>2000){
+        //     $sisa=$berat_rabuk-2000;
+        //     $waktu_tambahan=$sisa/250;
+        //     $waktu_buka=round(20+$waktu_tambahan, 2)+0.01;
+        // }
 
 
         //iot control modbus
-        Endian::$defaultEndian=Endian::BIG_ENDIAN;
         $list=[
             'modbus_url'    =>$options['modbus_url'],
             'modbus_port'   =>$options['modbus_port']
@@ -401,14 +379,26 @@ class GeneralHelper{
             ->setReadTimeoutSec(30)
             ->build();
 
-        $startAddress=18;
+        $type=substr($options['modbus_address'], 0, 1);
+        $startAddress=(int)(substr($options['modbus_address'], 1));
+        $startAddress=$startAddress-1;
         $unitID=1;
 
-        $registers=[Types::toReal($motor_dipilih)];
-        $packet=new WriteMultipleRegistersRequest($startAddress, $registers, $unitID);
+        $status="error";
+        if($type=="4"){
+            $registers=[Types::toReal(1)];
+            $packet=new WriteMultipleRegistersRequest($startAddress, $registers, $unitID);
 
-        $registers2=[Types::toReal($motor_tertutup)];
-        $packet2=new WriteMultipleRegistersRequest($startAddress, $registers2, $unitID);
+            $registers2=[Types::toReal(0)];
+            $packet2=new WriteMultipleRegistersRequest($startAddress, $registers2, $unitID);
+        }
+        else{
+            $coil=true;
+            $packet=new WriteSingleCoilRequest($startAddress, $coil, $unitID);
+
+            $coil2=false;
+            $packet2=new WriteSingleCoilRequest($startAddress, $coil2, $unitID);
+        }
 
         $waktu_eksekusi="";
         try {
@@ -423,18 +413,19 @@ class GeneralHelper{
             $date_2=microtime(true)/1000;
 
             $waktu_eksekusi=($date_2-$date_1)*1000;
-
+            $status="success";
         }
         catch(\Exception $exception) {
-            echo 'An exception occurred'."<br/>";
-            echo $exception->getMessage()."<br/>";
-            echo $exception->getTraceAsString()."<br/>";
+            // echo 'An exception occurred'."<br/>";
+            // echo $exception->getMessage()."<br/>";
+            // echo $exception->getTraceAsString()."<br/>";
         }
         finally{
             $connection->close();
         }
 
         return [
+            'status'        =>$status,
             'waktu_tunggu'  =>$waktu_buka,
             'waktu_tunggu_plus_tutup'   =>/*$waktu_buka+2*/"",
             'waktu_tunggu_simulasi' =>$waktu_eksekusi

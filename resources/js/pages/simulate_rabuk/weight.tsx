@@ -83,9 +83,11 @@ export default function Page(props) {
     const [form_input, setFormInput]=useState({
         modbus_url:"127.0.0.1",
         modbus_port:"502",
+        modbus_address:"40029",
         berat_rabuk:""
     })
     const [response, setResponse]=useState({
+        status:"",
         waktu_tunggu:"",
         waktu_tunggu_plus_tutup:"",
         waktu_tunggu_simulasi:""
@@ -171,6 +173,7 @@ export default function Page(props) {
                                 yup.object().shape({
                                     modbus_url:yup.string().required(),
                                     modbus_port:yup.string().required(),
+                                    modbus_address:yup.string().required(),
                                     berat_rabuk:yup.string().required()
                                 })
                             }
@@ -201,6 +204,21 @@ export default function Page(props) {
                                         />
                                     </div>
                                     <div className="grid grid-cols-5 items-center gap-2">
+                                        <Label className="col-span-2">Modbus Address</Label>
+                                        <NumericFormat 
+                                            value={formik.values.modbus_address} 
+                                            onValueChange={(values)=>formik.setFieldValue("modbus_address", values.value)}
+                                            customInput={Input} 
+                                            thousandSeparator={false}
+                                            className="col-span-3" 
+                                            decimalScale={0}
+                                            allowNegative={false}
+                                            allowLeadingZeros
+                                            maxLength={5}
+                                            placeholder="00001"
+                                        />
+                                    </div>
+                                    <div className="grid grid-cols-5 items-center gap-2">
                                         <Label className="col-span-2">Berat Pupuk yang akan Disimulasi</Label>
                                         <div className="relative flex col-span-3">
                                             <div className="absolute inset-y-0 end-0 flex items-center pe-3.5 pointer-events-none text-sm">
@@ -214,6 +232,11 @@ export default function Page(props) {
                                                 thousandSeparator 
                                                 className="pr-10 w-full" 
                                                 decimalScale={0}
+                                                allowNegative={false}
+                                                isAllowed={(values)=>{
+                                                    return values.value<=2000
+                                                }}
+                                                placeholder="0-2000"
                                             />
                                         </div>
                                     </div>
@@ -221,7 +244,7 @@ export default function Page(props) {
                                         <Label className="col-span-2"></Label>
                                         <Button 
                                             type="submit" 
-                                            disabled={formik.isSubmitting||!(formik.dirty&&formik.isValid)}
+                                            disabled={formik.isSubmitting||!(formik.dirty&&formik.isValid)||(formik.values.modbus_address<40000||formik.values.modbus_address>=50000)}
                                             className="w-[150px]"
                                         >
                                             Simulasi Pemupukan
@@ -233,7 +256,7 @@ export default function Page(props) {
 
                         <div className="border bg-accent rounded-lg p-3 mx-5 mt-10 text-sm">
                             <span className="text-base font-bold">Response :</span>
-                            {response.waktu_tunggu_ideal!==""&&
+                            {response.status=="success"&&
                                 <div className="flex flex-col items-start gap-0.5 mt-3 text-sm">
                                     <div>Waktu Tunggu : {response.waktu_tunggu}</div>
                                     <div>Waktu Tunggu + Tutup : {response.waktu_tunggu_plus_tutup}</div>
@@ -253,6 +276,11 @@ export default function Page(props) {
                                     >
                                         reset
                                     </Button>
+                                </div>
+                            }
+                            {response.status=="error"&&
+                                <div className="flex flex-col items-start gap-0.5 mt-3 text-sm">
+                                    <div>Gagal koneksi!</div>
                                 </div>
                             }
                         </div>
