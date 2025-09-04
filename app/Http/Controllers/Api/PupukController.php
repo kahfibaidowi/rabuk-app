@@ -37,7 +37,7 @@ class PupukController extends Controller
             'usia_tanaman'  =>"required|integer",
             'jumlah_tanaman'=>"required|integer",
             "dosis_urea"    =>"present",
-            "dosis_sp36"    =>"present",
+            "dosis_mkp"    =>"present",
             "dosis_kcl"     =>"present"
         ]);
         if($validation->fails()){
@@ -52,17 +52,18 @@ class PupukController extends Controller
         DB::transaction(function()use($req, &$data_urea){
             $lahan=LahanRepo::get($req['lahan_id']);
 
-            if($req['dosis_urea']!=""){
-                $process_rabuk=GeneralHelper::process_mv("urea", $req['dosis_urea'], $lahan);
-                $data_urea=$process_rabuk;
-            }
+            // //dinonaktifkan sementara
+            // if($req['dosis_urea']!=""){
+            //     $process_rabuk=GeneralHelper::process_mv("urea", $req['dosis_urea'], $lahan);
+            //     $data_urea=$process_rabuk;
+            // }
 
             PupukModel::create([
                 'lahan_id'      =>$req['lahan_id'],
                 'usia_tanaman'  =>$req['usia_tanaman'],
                 'jumlah_tanaman'=>$req['jumlah_tanaman'],
                 'dosis_urea'    =>$req['dosis_urea']!=""?$req['dosis_urea']:null,
-                'dosis_sp36'    =>$req['dosis_sp36']!=""?$req['dosis_sp36']:null,
+                'dosis_mkp'    =>$req['dosis_mkp']!=""?$req['dosis_mkp']:null,
                 'dosis_kcl'     =>$req['dosis_kcl']!=""?$req['dosis_kcl']:null
             ]);
         });
@@ -192,8 +193,8 @@ class PupukController extends Controller
             'modbus_port'   =>$req['modbus_port'],
             'urea_gram'     =>$req['urea_gram'],
             'urea_v_liter'  =>$req['urea_v_liter'],
-            'sp36_gram'     =>$req['sp36_gram'],
-            'sp36_v_liter'  =>$req['sp36_v_liter'],
+            'mkp_gram'     =>$req['mkp_gram'],
+            'mkp_v_liter'  =>$req['mkp_v_liter'],
             'kcl_gram'      =>$req['kcl_gram'],
             'kcl_v_liter'   =>$req['kcl_v_liter'],
         ];

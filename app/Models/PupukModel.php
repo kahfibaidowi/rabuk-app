@@ -19,7 +19,7 @@ class PupukModel extends Model
         "usia_tanaman",
         "jumlah_tanaman",
         "dosis_urea",
-        "dosis_sp36",
+        "dosis_mkp",
         "dosis_kcl"
     ];
     protected $casts=[

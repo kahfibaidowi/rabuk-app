@@ -93,6 +93,7 @@ import swal from "sweetalert2"
 import withReactContent from 'sweetalert2-react-content'
 import TablePagination from "@/components/widget.table-pagination"
 import _ from "underscore"
+import _lod from "lodash"
 import WidgetGaugeTanah from "@/components/widget.gauge-tanah"
 import WidgetLineChartTanah from "@/components/widget.line-chart-tanah"
 import { reverse } from "dns"
@@ -100,6 +101,7 @@ import { countMonth, data_fase, fase_pertumbuhan, options_lahan } from "@/config
 import { Checkbox } from "@/components/ui/checkbox"
 
 const MySwal=withReactContent(swal)
+const decimal_scale=2
 
 
 export default function Page(props) {
@@ -633,6 +635,12 @@ const KondisiTanahDanIklim=({last_data})=>{
 }
 
 const DosisPupukPerTanaman=({last_data, lahan, setFilter, filter})=>{
+    const konsentrasi={
+        urea_n:46,
+        mkp_p:22.7,
+        mkp_k:28.7,
+        kcl_k:50
+    }
 
     const lahan_id=usePage().props.lahan_id
     const [openModal, setOpenModal]=useState(false)
@@ -673,14 +681,34 @@ const DosisPupukPerTanaman=({last_data, lahan, setFilter, filter})=>{
         return fase?.ideal_k-item.soil_k
     }
     const dosis_urea=(item)=>{
-        return Math.max(0, (skn(item)*100)/46)
+        const dosis=Math.max(0, (skn(item)*100)/konsentrasi.urea_n)
+        return _lod.ceil(dosis, decimal_scale)
     }
-    const dosis_sp36=(item)=>{
-        return Math.max(0, (skp(item)*100)/16)
+    const dosis_mkp=(item)=>{
+        const dosis=Math.max(0, (skp(item)*100)/konsentrasi.mkp_p)
+        return _lod.ceil(dosis, decimal_scale)
     }
     const dosis_kcl=(item)=>{
-        return Math.max(0, (skk(item)*100)/50)
+        //nilai kcl
+        const kcl_g=Math.max(0, (skk(item)*100)/konsentrasi.kcl_k)
+        //karena mkp mengandung unsur K 28.7%, convert hasil mkp dari p ke k
+        const mkp_p_to_k_g=dosis_mkp(item)*(konsentrasi.mkp_k/konsentrasi.mkp_p)
+
+        //kcl dikurangi k dari mkp
+        const dosis=Math.max(0, (kcl_g-mkp_p_to_k_g))
+        return _lod.ceil(dosis, decimal_scale)
     }
+    const k_berlebih=(item)=>{
+        //nilai kcl
+        const kcl_g=Math.max(0, (skk(item)*100)/konsentrasi.kcl_k)
+        //karena mkp mengandung unsur K 28.7%, convert hasil mkp dari p ke k
+        const mkp_p_to_k_g=dosis_mkp(item)*(konsentrasi.mkp_k/konsentrasi.mkp_p)
+
+        //kcl dikurangi k dari mkp
+        const dosis=kcl_g-mkp_p_to_k_g
+        return _lod.ceil(dosis, decimal_scale)
+    }
+
 
     
     return (
@@ -698,7 +726,7 @@ const DosisPupukPerTanaman=({last_data, lahan, setFilter, filter})=>{
                                         <div className="flex flex-col items-center justify-center -mt-12">
                                             <div className="w-36 h-36 bg-white dark:bg-accent rounded-full shadow-lg px-2 flex items-center justify-center">
                                                 <span className="text-center text-xl font-bold">
-                                                    {dosis_urea(last_data).toFixed(2)*1}<br/>gram
+                                                    {dosis_urea(last_data)}<br/>gram
                                                 </span>
                                             </div>
                                             <span className="text-xl font-bold mt-5 text-gray-800">Urea</span>
@@ -718,18 +746,19 @@ const DosisPupukPerTanaman=({last_data, lahan, setFilter, filter})=>{
                                         <div className="flex flex-col items-center justify-center -mt-12">
                                             <div className="w-36 h-36 bg-white dark:bg-accent rounded-full shadow-lg px-2 flex items-center justify-center">
                                                 <span className="text-center text-xl font-bold">
-                                                    {dosis_sp36(last_data).toFixed(2)*1}<br/>gram
+                                                    {dosis_mkp(last_data)}<br/>gram
                                                 </span>
                                             </div>
-                                            <span className="text-xl font-bold mt-5 text-gray-800">SP-36</span>
+                                            <span className="text-xl font-bold mt-5 text-gray-800">MKP</span>
                                         </div>
                                         <div className="mt-5 bg-white dark:bg-accent rounded-2xl px-6 py-3 flex flex-col items-center justify-center">
                                             <div className="text-center">
                                                 Kandungan Pupuk<br/>
-                                                <strong>36% P₂O₅ = 16% P</strong>
+                                                <strong>52% P₂O₅ = 22.7% P</strong>,{' '}
+                                                <strong>34% K₂O = 28.7% K</strong>
                                             </div>
                                             <div className="w-full border-b dark:border-gray-500 mt-2"></div>
-                                            <div className="mt-5 text-center">Dosis SP-36 = <strong>{dosis_sp36(last_data)} gram</strong> per tanaman</div>
+                                            <div className="mt-5 text-center">Dosis MKP = <strong>{dosis_mkp(last_data)} gram</strong> per tanaman</div>
                                         </div>
                                     </div>
                                 </div>
@@ -738,7 +767,7 @@ const DosisPupukPerTanaman=({last_data, lahan, setFilter, filter})=>{
                                         <div className="flex flex-col items-center justify-center -mt-12">
                                             <div className="w-36 h-36 bg-white dark:bg-accent rounded-full shadow-lg px-2 flex items-center justify-center">
                                                 <span className="text-center text-xl font-bold">
-                                                    {dosis_kcl(last_data).toFixed(2)*1}<br/>gram
+                                                    {dosis_kcl(last_data)}<br/>gram
                                                 </span>
                                             </div>
                                             <span className="text-xl font-bold mt-5 text-gray-800">KCL</span>
@@ -754,15 +783,54 @@ const DosisPupukPerTanaman=({last_data, lahan, setFilter, filter})=>{
                                     </div>
                                 </div>
                             </div>
-                            <div className="flex justify-end mt-10">
-                                <Button 
-                                    type="button"
-                                    variant="secondary"
-                                    className="bg-green-600 hover:bg-green-800 text-white font-bold rounded-full"
-                                    onClick={e=>setOpenModal(true)}
-                                >
-                                    Pupuk Sekarang <ArrowRight/>
-                                </Button>
+                            <div className="mt-10">
+                                {k_berlebih(last_data)<0?
+                                    <div className="py-5 px-5 mb-4 text-red-800 border border-red-300 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400 dark:border-red-800" role="alert">
+                                        <div className="flex items-center">
+                                            <svg className="shrink-0 w-4 h-4 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                            <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+                                            </svg>
+                                            <span className="sr-only">Info</span>
+                                            <h3 className="text-lg font-medium">Peringatan Pemupukan</h3>
+                                        </div>
+                                        <div className="mt-2 mb-4 text-sm">
+                                            Dari hasil perhitungan pada faktor Kalium, Setelah dikurangi dengan kandungan pada pupuk KCl, Terdapat kelebihan Kalium pada pupuk MKP sebesar <strong>±{Math.abs(k_berlebih(last_data))} gram</strong>!
+                                        </div>
+                                        <div className="flex">
+                                            <Button 
+                                                type="button"
+                                                variant="secondary"
+                                                className="bg-green-600 hover:bg-green-800 text-white font-bold rounded-lg"
+                                                onClick={e=>setOpenModal(true)}
+                                            >
+                                                Pupuk Sekarang <ArrowRight/>
+                                            </Button>
+                                        </div>
+                                    </div>
+                                :
+                                    <div className="p-4 mb-4 text-green-800 border border-green-300 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400 dark:border-green-800" role="alert">
+                                        <div className="flex items-center">
+                                            <svg className="shrink-0 w-4 h-4 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                            <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+                                            </svg>
+                                            <span className="sr-only">Info</span>
+                                            <h3 className="text-lg font-medium">Pemberitahuan Pemupukan</h3>
+                                        </div>
+                                        <div className="mt-2 mb-4 text-sm">
+                                            Dosis pupuk sudah sesuai dan bisa melakukan pemupukan!
+                                        </div>
+                                        <div className="flex">
+                                            <Button 
+                                                type="button"
+                                                variant="secondary"
+                                                className="bg-green-600 hover:bg-green-800 text-white font-bold rounded-lg"
+                                                onClick={e=>setOpenModal(true)}
+                                            >
+                                                Pupuk Sekarang <ArrowRight/>
+                                            </Button>
+                                        </div>
+                                    </div>
+                                }
                             </div>
                         </div>
                     :
@@ -784,14 +852,14 @@ const DosisPupukPerTanaman=({last_data, lahan, setFilter, filter})=>{
                                 <strong className="text-lg leading-6">Pupuk sesuai data, bukan kira-kira. Dengan pupuk sekarang, semua jadi otomatis dan akurat!</strong>
                                 
                                 <Formik
-                                    initialValues={{urea:true, sp36:false,kcl:false, jumlah_tanaman:lahan.data.data.jumlah_tanaman}}
+                                    initialValues={{urea:true, mkp:false,kcl:false, jumlah_tanaman:lahan.data.data.jumlah_tanaman}}
                                     onSubmit={(values, actions)=>{
                                         const new_lahan=lahan.data.data
                                         const new_values=Object.assign({}, values, {
                                             lahan_id:lahan_id,
                                             usia_tanaman:countMonth(new_lahan.tgl_tanam, format(new Date(), "yyyy-MM-dd")),
                                             dosis_urea:values.urea?dosis_urea(last_data):"",
-                                            dosis_sp36:values.sp36?dosis_sp36(last_data):"",
+                                            dosis_mkp:values.mkp?dosis_mkp(last_data):"",
                                             dosis_kcl:values.kcl?dosis_kcl(last_data):""
                                         })
         
@@ -822,14 +890,13 @@ const DosisPupukPerTanaman=({last_data, lahan, setFilter, filter})=>{
                                                 <Label className="bg-white border-white flex items-start gap-3 rounded-lg border p-3 py-2.5 has-[[aria-checked=true]]:border-orange-600 has-[[aria-checked=true]]:bg-orange-400 dark:has-[[aria-checked=true]]:border-orange-600 dark:has-[[aria-checked=true]]:bg-orange-400">
                                                     <Checkbox
                                                         id="toggle-2"
-                                                        defaultChecked={formik.values.sp36}
-                                                        disabled
+                                                        defaultChecked={formik.values.mkp}
                                                         className="data-[state=checked]:border-green-600 data-[state=checked]:bg-green-600 data-[state=checked]:text-white dark:data-[state=checked]:border-green-700 dark:data-[state=checked]:bg-green-700"
-                                                        onCheckedChange={e=>formik.setFieldValue("sp36", e)}
+                                                        onCheckedChange={e=>formik.setFieldValue("mkp", e)}
                                                     />
                                                     <div className="grid gap-1.5 font-normal">
                                                         <p className="text-base text-gray-800 leading-none font-medium">
-                                                            SP-36 <strong>{dosis_sp36(last_data)*formik.values.jumlah_tanaman}</strong> gram
+                                                            MKP <strong>{dosis_mkp(last_data)*formik.values.jumlah_tanaman}</strong> gram
                                                         </p>
                                                     </div>
                                                 </Label>
@@ -837,7 +904,6 @@ const DosisPupukPerTanaman=({last_data, lahan, setFilter, filter})=>{
                                                     <Checkbox
                                                         id="toggle-2"
                                                         defaultChecked={formik.values.kcl}
-                                                        disabled
                                                         className="data-[state=checked]:border-green-600 data-[state=checked]:bg-green-600 data-[state=checked]:text-white dark:data-[state=checked]:border-green-700 dark:data-[state=checked]:bg-green-700"
                                                         onCheckedChange={e=>formik.setFieldValue("kcl", e)}
                                                     />
@@ -924,9 +990,9 @@ const DataPupuk=({dataSource, filter, setFilter})=>{
                                     },
                                     {
                                         headerClassName:"w-[150px]",
-                                        header:"Dosis SP-36",
+                                        header:"Dosis MKP",
                                         renderItem:(item)=>(
-                                            <>{!_.isNull(item.dosis_sp36)?<><strong>{(item.dosis_sp36*item.jumlah_tanaman).toFixed(2)*1}</strong> gram</>:<XCircle className="text-red-600"/>}</>
+                                            <>{!_.isNull(item.dosis_mkp)?<><strong>{(item.dosis_mkp*item.jumlah_tanaman).toFixed(2)*1}</strong> gram</>:<XCircle className="text-red-600"/>}</>
                                         )
                                     },
                                     {

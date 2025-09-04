@@ -30,8 +30,8 @@ class LahanModel extends Model
        "modbus_status",
        "urea_gram",
        "urea_v_liter",
-       "sp36_gram",
-       "sp36_v_liter",
+       "mkp_gram",
+       "mkp_v_liter",
        "kcl_gram",
        "kcl_v_liter"
     ];

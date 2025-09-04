@@ -142,15 +142,15 @@ class GeneralHelper{
         //     'modbus_port',
         //     'urea_gram',
         //     'urea_v_liter',
-        //     'sp36_gram',
-        //     'sp36_v_liter',
+        //     'mkp_gram',
+        //     'mkp_v_liter',
         //     'kcl_gram',
         //     'kcl_v_liter'
         // ];
 
         //larutan pupuk per liter
         $larutan_urea=$options['urea_gram']/max($options['urea_v_liter'], 1);
-        $larutan_sp36=$options['sp36_gram']/max($options['sp36_v_liter'], 1);
+        $larutan_mkp=$options['mkp_gram']/max($options['mkp_v_liter'], 1);
         $larutan_kcl=$options['kcl_gram']/max($options['kcl_v_liter'], 1);
 
         $larutan_dipilih=$larutan_urea;
@@ -158,8 +158,8 @@ class GeneralHelper{
             case "urea":
                 $larutan_dipilih=$larutan_urea;
             break;
-            case "sp36":
-                $larutan_dipilih=$larutan_sp36;
+            case "mkp":
+                $larutan_dipilih=$larutan_mkp;
             break;
             case "kcl":
                 $larutan_dipilih=$larutan_kcl;
@@ -239,8 +239,8 @@ class GeneralHelper{
         //     'modbus_port',
         //     'urea_gram',
         //     'urea_v_liter',
-        //     'sp36_gram',
-        //     'sp36_v_liter',
+        //     'mkp_gram',
+        //     'mkp_v_liter',
         //     'kcl_gram',
         //     'kcl_v_liter',
         //     'time'

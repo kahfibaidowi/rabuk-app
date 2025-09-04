@@ -28,8 +28,8 @@ return new class extends Migration
             $table->string("modbus_status")->default("disconnected");
             $table->unsignedInteger("urea_gram");
             $table->unsignedInteger("urea_v_liter");
-            $table->unsignedInteger("sp36_gram");
-            $table->unsignedInteger("sp36_v_liter");
+            $table->unsignedInteger("mkp_gram");
+            $table->unsignedInteger("mkp_v_liter");
             $table->unsignedInteger("kcl_gram");
             $table->unsignedInteger("kcl_v_liter");
             $table->timestamps();
