@@ -311,66 +311,81 @@ class GeneralHelper{
         ];
     }
 
-    public static function process_mv_rabuk_time($type="urea", $berat_rabuk, $options){
+    public static function process_mv_rabuk_time($type="urea", $options){
         Endian::$defaultEndian=Endian::BIG_ENDIAN;
 
         //options params
         // $options=[
         //     'modbus_url',
         //     'modbus_port',
+        //     'sensor_active',
+        //     'modbus_url',
+        //     'berat_rabuk',
         // ];
 
 
         //-----------------------------
 
         //variable
-        $berat_rabuk=ceil($berat_rabuk);
+        //iot control modbus
+        $list=[
+            'modbus_url'    =>$options['modbus_url'],
+            'modbus_port'   =>$options['modbus_port'],
+            'name'          =>$options['name'],
+            'sensor_selected'   =>$options['sensor_selected'],
+            'address'       =>$options['address'],
+            'berat_rabuk'   =>$options['berat_rabuk']
+        ];
+
+        //kondisi
+        if(!$list['sensor_selected']){
+            return [
+                'status'        =>"sensor_not_selected",
+                'name'          =>$list['name'],
+                'waktu_tunggu'  =>"",
+                'waktu_tunggu_simulasi' =>""
+            ];
+        }
 
         //waktu buka
         $waktu_buka=0;
-        if($berat_rabuk<=100){
+        if($list['berat_rabuk']<=100){
             $waktu_buka=0.5;
         }
-        else if($berat_rabuk<=200){
+        else if($list['berat_rabuk']<=200){
             $waktu_buka=1;
         }
-        else if($berat_rabuk<=400){
+        else if($list['berat_rabuk']<=400){
             $waktu_buka=2;
         }
-        else if($berat_rabuk<=650){
+        else if($list['berat_rabuk']<=650){
             $waktu_buka=3;
         }
-        else if($berat_rabuk<=800){
+        else if($list['berat_rabuk']<=800){
             $waktu_buka=4;
         }
-        else if($berat_rabuk<=1000){
+        else if($list['berat_rabuk']<=1000){
             $waktu_buka=5;
         }
-        else if($berat_rabuk<=1350){
+        else if($list['berat_rabuk']<=1350){
             $waktu_buka=6;
         }
-        else if($berat_rabuk<=1550){
+        else if($list['berat_rabuk']<=1550){
             $waktu_buka=7;
         }
-        else if($berat_rabuk<=1800){
+        else if($list['berat_rabuk']<=1800){
             $waktu_buka=8;
         }
-        else if($berat_rabuk<=2000){
+        else if($list['berat_rabuk']<=2000){
             $waktu_buka=9;
         }
-        // else if($berat_rabuk>2000){
-        //     $sisa=$berat_rabuk-2000;
+        // else if($list['berat_rabuk']>2000){
+        //     $sisa=$list['berat_rabuk']-2000;
         //     $waktu_tambahan=$sisa/250;
         //     $waktu_buka=round(20+$waktu_tambahan, 2)+0.01;
         // }
 
-
-        //iot control modbus
-        $list=[
-            'modbus_url'    =>$options['modbus_url'],
-            'modbus_port'   =>$options['modbus_port']
-        ];
-
+        //process
         $connection=BinaryStreamConnection::getBuilder()
             ->setPort($list['modbus_port'])
             ->setHost($list['modbus_url'])
@@ -379,8 +394,8 @@ class GeneralHelper{
             ->setReadTimeoutSec(30)
             ->build();
 
-        $type=substr($options['modbus_address'], 0, 1);
-        $startAddress=(int)(substr($options['modbus_address'], 1));
+        $type=substr($list['address'], 0, 1);
+        $startAddress=(int)(substr($list['address'], 1));
         $startAddress=$startAddress-1;
         $unitID=1;
 
@@ -426,8 +441,8 @@ class GeneralHelper{
 
         return [
             'status'        =>$status,
+            'name'          =>$list['name'],
             'waktu_tunggu'  =>$waktu_buka,
-            'waktu_tunggu_plus_tutup'   =>/*$waktu_buka+2*/"",
             'waktu_tunggu_simulasi' =>$waktu_eksekusi
         ];
     }

@@ -234,20 +234,39 @@ class PupukController extends Controller
         $req=$request->all();
 
         //variable
-
-        $options=[
+        $options_valve_1=[
             'modbus_url'    =>$req['modbus_url'],
             'modbus_port'   =>$req['modbus_port'],
-            'modbus_address'=>$req['modbus_address'],
-            'berat_rabuk'   =>$req['berat_rabuk']
+            'name'          =>"valve_1",
+            'sensor_selected'   =>$req['sensor_selected_v1'],
+            'address'       =>$req['address_v1'],
+            'berat_rabuk'   =>$req['berat_rabuk_v1']
         ];
-        $process_rabuk=GeneralHelper::process_mv_rabuk_time("urea", $options['berat_rabuk'], $options);
+        $options_valve_2=[
+            'modbus_url'    =>$req['modbus_url'],
+            'modbus_port'   =>$req['modbus_port'],
+            'name'          =>"valve_2",
+            'sensor_selected'   =>$req['sensor_selected_v2'],
+            'address'       =>$req['address_v2'],
+            'berat_rabuk'   =>$req['berat_rabuk_v2']
+        ];
+        $options_valve_3=[
+            'modbus_url'    =>$req['modbus_url'],
+            'modbus_port'   =>$req['modbus_port'],
+            'name'          =>"valve_3",
+            'sensor_selected'   =>$req['sensor_selected_v3'],
+            'address'       =>$req['address_v3'],
+            'berat_rabuk'   =>$req['berat_rabuk_v3']
+        ];
 
+        //process
+        $process_rabuk_valve_1=GeneralHelper::process_mv_rabuk_time("urea", $options_valve_1);
+        $process_rabuk_valve_2=GeneralHelper::process_mv_rabuk_time("mkp", $options_valve_2);
+        $process_rabuk_valve_3=GeneralHelper::process_mv_rabuk_time("kcl", $options_valve_3);
+
+        //return
         return response()->json([
-            'status'        =>$process_rabuk['status'],
-            'waktu_tunggu'  =>$process_rabuk['waktu_tunggu'],
-            'waktu_tunggu_plus_tutup'   =>$process_rabuk['waktu_tunggu_plus_tutup'],
-            'waktu_tunggu_simulasi' =>$process_rabuk['waktu_tunggu_simulasi']
+            'data'  =>[$process_rabuk_valve_1, $process_rabuk_valve_2, $process_rabuk_valve_3]
         ]);
     }
 }
