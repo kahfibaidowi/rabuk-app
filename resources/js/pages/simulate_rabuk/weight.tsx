@@ -74,6 +74,7 @@ import WidgetTanaman from "@/components/widget.tanaman"
 import TanamanPagination from "@/components/widget.tanaman-pagination"
 import swal from "sweetalert2"
 import withReactContent from 'sweetalert2-react-content'
+import { Switch } from "@/components/ui/switch"
 
 const MySwal=withReactContent(swal)
 
@@ -83,14 +84,18 @@ export default function Page(props) {
     const [form_input, setFormInput]=useState({
         modbus_url:"127.0.0.1",
         modbus_port:"502",
-        modbus_address:"40029",
-        berat_rabuk:""
+        sensor_selected_v1:true,
+        address_v1:"40029",
+        berat_rabuk_v1:"",
+        sensor_selected_v2:true,
+        address_v2:"40031",
+        berat_rabuk_v2:"",
+        sensor_selected_v3:true,
+        address_v3:"40033",
+        berat_rabuk_v3:""
     })
     const [response, setResponse]=useState({
-        status:"",
-        waktu_tunggu:"",
-        waktu_tunggu_plus_tutup:"",
-        waktu_tunggu_simulasi:""
+        data:[{status:"idle"}, {status:"idle"}, {status:"idle"}]
     })
 
     useEffect(()=>{
@@ -103,7 +108,7 @@ export default function Page(props) {
                 if(err.response.data?.error=="VALIDATION_ERROR")
                     toast.error(err.response.data.data, {position:"bottom-center"})
                 else
-                    toast.error("Insert Data Failed! ", {position:"bottom-center"})
+                    toast.error("Process Data Failed! ", {position:"bottom-center"})
             }
         })
 
@@ -173,8 +178,15 @@ export default function Page(props) {
                                 yup.object().shape({
                                     modbus_url:yup.string().required(),
                                     modbus_port:yup.string().required(),
-                                    modbus_address:yup.string().required(),
-                                    berat_rabuk:yup.string().required()
+                                    sensor_selected_v1:yup.boolean().required(),
+                                    address_v1:yup.string().when("sensor_selected_v1", {is:true, then:(schema)=>schema.required()}),
+                                    berat_rabuk_v1:yup.string().when("sensor_selected_v1", {is:true, then:(schema)=>schema.required()}),
+                                    sensor_selected_v2:yup.boolean().required(),
+                                    address_v2:yup.string().when("sensor_selected_v2", {is:true, then:(schema)=>schema.required()}),
+                                    berat_rabuk_v2:yup.string().when("sensor_selected_v2", {is:true, then:(schema)=>schema.required()}),
+                                    sensor_selected_v3:yup.boolean().required(),
+                                    address_v3:yup.string().when("sensor_selected_v3", {is:true, then:(schema)=>schema.required()}),
+                                    berat_rabuk_v3:yup.string().when("sensor_selected_v3", {is:true, then:(schema)=>schema.required()}),
                                 })
                             }
                             enableReinitialize
@@ -204,47 +216,147 @@ export default function Page(props) {
                                         />
                                     </div>
                                     <div className="grid grid-cols-5 items-center gap-2">
-                                        <Label className="col-span-2">Modbus Address</Label>
-                                        <NumericFormat 
-                                            value={formik.values.modbus_address} 
-                                            onValueChange={(values)=>formik.setFieldValue("modbus_address", values.value)}
-                                            customInput={Input} 
-                                            thousandSeparator={false}
-                                            className="col-span-3" 
-                                            decimalScale={0}
-                                            allowNegative={false}
-                                            allowLeadingZeros
-                                            maxLength={5}
-                                            placeholder="00001"
-                                        />
-                                    </div>
-                                    <div className="grid grid-cols-5 items-center gap-2">
-                                        <Label className="col-span-2">Berat Pupuk yang akan Disimulasi</Label>
-                                        <div className="relative flex col-span-3">
-                                            <div className="absolute inset-y-0 end-0 flex items-center pe-3.5 pointer-events-none text-sm">
-                                                ml
+                                        <Label className="col-span-2">Motor Valve 1</Label>
+                                        <div className="flex flex-col col-span-3">
+                                            <div className="flex items-center mb-1">
+                                                <Switch
+                                                    checked={formik.values.sensor_selected_v1}
+                                                    onCheckedChange={()=>formik.setFieldValue("sensor_selected_v1", !formik.values.sensor_selected_v1)}
+                                                />
+                                                <span className="ml-2 text-sm">Aktifkan Motor Valve</span>
                                             </div>
-                                            
                                             <NumericFormat 
-                                                value={formik.values.berat_rabuk} 
-                                                onValueChange={(values)=>formik.setFieldValue("berat_rabuk", values.value)}
+                                                value={formik.values.address_v1} 
+                                                onValueChange={(values)=>formik.setFieldValue("address_v1", values.value)}
                                                 customInput={Input} 
-                                                thousandSeparator 
-                                                className="pr-10 w-full" 
+                                                thousandSeparator={false}
+                                                className="mb-1" 
                                                 decimalScale={0}
                                                 allowNegative={false}
-                                                isAllowed={(values)=>{
-                                                    return values.value<=2000
-                                                }}
-                                                placeholder="0-2000"
+                                                allowLeadingZeros
+                                                maxLength={5}
+                                                placeholder="Modbus Address | 400XX"
+                                                disabled={!formik.values.sensor_selected_v1}
                                             />
+                                            <div className="relative flex">
+                                                <div className="absolute inset-y-0 end-0 flex items-center pe-3.5 pointer-events-none text-sm">
+                                                    ml
+                                                </div>
+                                                
+                                                <NumericFormat 
+                                                    value={formik.values.berat_rabuk_v1} 
+                                                    onValueChange={(values)=>formik.setFieldValue("berat_rabuk_v1", values.value)}
+                                                    customInput={Input} 
+                                                    thousandSeparator 
+                                                    className="pr-10 w-full" 
+                                                    decimalScale={0}
+                                                    allowNegative={false}
+                                                    isAllowed={(values)=>{
+                                                        return values.value<=2000
+                                                    }}
+                                                    placeholder="Berat Rabuk | 0-2000"
+                                                disabled={!formik.values.sensor_selected_v1}
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div className="grid grid-cols-5 items-center gap-2">
+                                        <Label className="col-span-2">Motor Valve 2</Label>
+                                        <div className="flex flex-col col-span-3">
+                                            <div className="flex items-center mb-1">
+                                                <Switch
+                                                    checked={formik.values.sensor_selected_v2}
+                                                    onCheckedChange={()=>formik.setFieldValue("sensor_selected_v2", !formik.values.sensor_selected_v2)}
+                                                />
+                                                <span className="ml-2 text-sm">Aktifkan Motor Valve</span>
+                                            </div>
+                                            <NumericFormat 
+                                                value={formik.values.address_v2} 
+                                                onValueChange={(values)=>formik.setFieldValue("address_v2", values.value)}
+                                                customInput={Input} 
+                                                thousandSeparator={false}
+                                                className="mb-1" 
+                                                decimalScale={0}
+                                                allowNegative={false}
+                                                allowLeadingZeros
+                                                maxLength={5}
+                                                placeholder="Modbus Address | 400XX"
+                                                disabled={!formik.values.sensor_selected_v2}
+                                            />
+                                            <div className="relative flex">
+                                                <div className="absolute inset-y-0 end-0 flex items-center pe-3.5 pointer-events-none text-sm">
+                                                    ml
+                                                </div>
+                                                
+                                                <NumericFormat 
+                                                    value={formik.values.berat_rabuk_v2} 
+                                                    onValueChange={(values)=>formik.setFieldValue("berat_rabuk_v2", values.value)}
+                                                    customInput={Input} 
+                                                    thousandSeparator 
+                                                    className="pr-10 w-full" 
+                                                    decimalScale={0}
+                                                    allowNegative={false}
+                                                    isAllowed={(values)=>{
+                                                        return values.value<=2000
+                                                    }}
+                                                    placeholder="Berat Rabuk | 0-2000"
+                                                disabled={!formik.values.sensor_selected_v2}
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div className="grid grid-cols-5 items-center gap-2">
+                                        <Label className="col-span-2">Motor Valve 3</Label>
+                                        <div className="flex flex-col col-span-3">
+                                            <div className="flex items-center mb-1">
+                                                <Switch
+                                                    checked={formik.values.sensor_selected_v3}
+                                                    onCheckedChange={()=>formik.setFieldValue("sensor_selected_v3", !formik.values.sensor_selected_v3)}
+                                                />
+                                                <span className="ml-2 text-sm">Aktifkan Motor Valve</span>
+                                            </div>
+                                            <NumericFormat 
+                                                value={formik.values.address_v3} 
+                                                onValueChange={(values)=>formik.setFieldValue("address_v3", values.value)}
+                                                customInput={Input} 
+                                                thousandSeparator={false}
+                                                className="mb-1" 
+                                                decimalScale={0}
+                                                allowNegative={false}
+                                                allowLeadingZeros
+                                                maxLength={5}
+                                                placeholder="Modbus Address | 400XX"
+                                                disabled={!formik.values.sensor_selected_v3}
+                                            />
+                                            <div className="relative flex">
+                                                <div className="absolute inset-y-0 end-0 flex items-center pe-3.5 pointer-events-none text-sm">
+                                                    ml
+                                                </div>
+                                                
+                                                <NumericFormat 
+                                                    value={formik.values.berat_rabuk_v3} 
+                                                    onValueChange={(values)=>formik.setFieldValue("berat_rabuk_v3", values.value)}
+                                                    customInput={Input} 
+                                                    thousandSeparator 
+                                                    className="pr-10 w-full" 
+                                                    decimalScale={0}
+                                                    allowNegative={false}
+                                                    isAllowed={(values)=>{
+                                                        return values.value<=2000
+                                                    }}
+                                                    placeholder="Berat Rabuk | 0-2000"
+                                                disabled={!formik.values.sensor_selected_v3}
+                                                />
+                                            </div>
                                         </div>
                                     </div>
                                     <div className="grid grid-cols-5 items-start gap-2 mt-5">
                                         <Label className="col-span-2"></Label>
                                         <Button 
                                             type="submit" 
-                                            disabled={formik.isSubmitting||!(formik.dirty&&formik.isValid)||(formik.values.modbus_address<40000||formik.values.modbus_address>=50000)}
+                                            disabled={formik.isSubmitting||!(formik.dirty&&formik.isValid)}
                                             className="w-[150px]"
                                         >
                                             Simulasi Pemupukan
@@ -254,34 +366,28 @@ export default function Page(props) {
                             )}
                         </Formik>
 
-                        <div className="border bg-accent rounded-lg p-3 mx-5 mt-10 text-sm">
+                        <div className="border bg-accent rounded-lg p-3 mx-5 mt-10 text-sm mb-5">
                             <span className="text-base font-bold">Response :</span>
-                            {response.status=="success"&&
-                                <div className="flex flex-col items-start gap-0.5 mt-3 text-sm">
-                                    <div>Waktu Tunggu : {response.waktu_tunggu}</div>
-                                    <div>Waktu Tunggu + Tutup : {response.waktu_tunggu_plus_tutup}</div>
-                                    <div>Waktu Tunggu aktual yang disimulasikan : {response.waktu_tunggu_simulasi}</div>
-                                    <Button 
-                                        type="button" 
-                                        size={10} 
-                                        className="px-3 font-normal" 
-                                        variant="outline"
-                                        onClick={e=>{
-                                            setResponse({
-                                                waktu_tunggu:"",
-                                                waktu_tunggu_plus_tutup:"",
-                                                waktu_tunggu_simulasi:""
-                                            })
-                                        }}
-                                    >
-                                        reset
-                                    </Button>
-                                </div>
+                            {response.data[0].status=="success"&&
+                                <pre className="mt-2">
+                                    Name : {response.data[0].name}{'\n'}
+                                    Waktu Tunggu : {response.data[0].waktu_tunggu}{'\n'}
+                                    Waktu Tunggu (Simulasi) : {response.data[0].waktu_tunggu_simulasi}
+                                </pre>
                             }
-                            {response.status=="error"&&
-                                <div className="flex flex-col items-start gap-0.5 mt-3 text-sm">
-                                    <div>Gagal koneksi!</div>
-                                </div>
+                            {response.data[1].status=="success"&&
+                                <pre className="mt-2">
+                                    Name : {response.data[1].name}{'\n'}
+                                    Waktu Tunggu : {response.data[1].waktu_tunggu}{'\n'}
+                                    Waktu Tunggu (Simulasi) : {response.data[1].waktu_tunggu_simulasi}
+                                </pre>
+                            }
+                            {response.data[2].status=="success"&&
+                                <pre className="mt-2">
+                                    Name : {response.data[2].name}{'\n'}
+                                    Waktu Tunggu : {response.data[2].waktu_tunggu}{'\n'}
+                                    Waktu Tunggu (Simulasi) : {response.data[2].waktu_tunggu_simulasi}
+                                </pre>
                             }
                         </div>
                     </div>
