@@ -99,8 +99,8 @@ export default function Page(props) {
         modbus_port:"",
         urea_gram:"",
         urea_v_liter:"",
-        sp36_gram:"",
-        sp36_v_liter:"",
+        mkp_gram:"",
+        mkp_v_liter:"",
         kcl_gram:"",
         kcl_v_liter:""
     })
@@ -225,8 +225,8 @@ export default function Page(props) {
                                     modbus_port:yup.string().required(),
                                     urea_gram:yup.string().required(),
                                     urea_v_liter:yup.string().required(),
-                                    sp36_gram:yup.string().required(),
-                                    sp36_v_liter:yup.string().required(),
+                                    mkp_gram:yup.string().required(),
+                                    mkp_v_liter:yup.string().required(),
                                     kcl_gram:yup.string().required(),
                                     kcl_v_liter:yup.string().required()
                                 })
@@ -443,10 +443,10 @@ export default function Page(props) {
                                         />
                                     </div>
                                     <div className="grid grid-cols-4 items-center gap-4">
-                                        <Label>SP-36 gram</Label>
+                                        <Label>MKP gram</Label>
                                         <NumericFormat 
-                                            value={formik.values.sp36_gram} 
-                                            onValueChange={(values)=>formik.setFieldValue("sp36_gram", values.value)}
+                                            value={formik.values.mkp_gram} 
+                                            onValueChange={(values)=>formik.setFieldValue("mkp_gram", values.value)}
                                             customInput={Input} 
                                             thousandSeparator 
                                             className="pr-10 w-full col-span-3" 
@@ -454,10 +454,10 @@ export default function Page(props) {
                                         />
                                     </div>
                                     <div className="grid grid-cols-4 items-center gap-4">
-                                        <Label>SP-36 volume/liter</Label>
+                                        <Label>MKP volume/liter</Label>
                                         <NumericFormat 
-                                            value={formik.values.sp36_v_liter} 
-                                            onValueChange={(values)=>formik.setFieldValue("sp36_v_liter", values.value)}
+                                            value={formik.values.mkp_v_liter} 
+                                            onValueChange={(values)=>formik.setFieldValue("mkp_v_liter", values.value)}
                                             customInput={Input} 
                                             thousandSeparator 
                                             className="pr-10 w-full col-span-3" 
