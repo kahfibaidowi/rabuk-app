@@ -83,12 +83,11 @@ export default function Page(props) {
     const [form_input, setFormInput]=useState({
         modbus_url:"127.0.0.1",
         modbus_port:"502",
-        time:""
+        address:"40029",
+        waktu_buka:""
     })
     const [response, setResponse]=useState({
-        waktu_tunggu:"",
-        waktu_tunggu_plus_tutup:"",
-        waktu_tunggu_simulasi:""
+        status:"idle"
     })
 
     useEffect(()=>{
@@ -171,7 +170,8 @@ export default function Page(props) {
                                 yup.object().shape({
                                     modbus_url:yup.string().required(),
                                     modbus_port:yup.string().required(),
-                                    time:yup.string().required()
+                                    address:yup.string().required(),
+                                    waktu_buka:yup.string().required()
                                 })
                             }
                             enableReinitialize
@@ -201,10 +201,25 @@ export default function Page(props) {
                                         />
                                     </div>
                                     <div className="grid grid-cols-5 items-center gap-2">
+                                        <Label className="col-span-2">Address MV</Label>
+                                        <NumericFormat 
+                                            value={formik.values.address} 
+                                            onValueChange={(values)=>formik.setFieldValue("address", values.value)}
+                                            customInput={Input} 
+                                            thousandSeparator={false}
+                                            className="col-span-3 mb-1" 
+                                            decimalScale={0}
+                                            allowNegative={false}
+                                            allowLeadingZeros
+                                            maxLength={5}
+                                            placeholder="Modbus Address | 400XX"
+                                        />
+                                    </div>
+                                    <div className="grid grid-cols-5 items-center gap-2">
                                         <Label className="col-span-2">Waktu (detik)</Label>
                                         <NumericFormat 
-                                            value={formik.values.time} 
-                                            onValueChange={(values)=>formik.setFieldValue("time", values.value)}
+                                            value={formik.values.waktu_buka} 
+                                            onValueChange={(values)=>formik.setFieldValue("waktu_buka", values.value)}
                                             customInput={Input} 
                                             thousandSeparator 
                                             className="pr-10 w-full col-span-3" 
@@ -227,27 +242,12 @@ export default function Page(props) {
 
                         <div className="border bg-accent rounded-lg p-3 mx-5 mt-10 text-sm">
                             <span className="text-base font-bold">Response :</span>
-                            {response.waktu_tunggu_ideal!==""&&
-                                <div className="flex flex-col items-start gap-0.5 mt-3 text-sm">
-                                    <div>Waktu Tunggu : {response.waktu_tunggu}</div>
-                                    <div>Waktu Tunggu + Tutup : {response.waktu_tunggu_plus_tutup}</div>
-                                    <div>Waktu Tunggu aktual yang disimulasikan : {response.waktu_tunggu_simulasi}</div>
-                                    <Button 
-                                        type="button" 
-                                        size={10} 
-                                        className="px-3 font-normal" 
-                                        variant="outline"
-                                        onClick={e=>{
-                                            setResponse({
-                                                waktu_tunggu:"",
-                                                waktu_tunggu_plus_tutup:"",
-                                                waktu_tunggu_simulasi:""
-                                            })
-                                        }}
-                                    >
-                                        reset
-                                    </Button>
-                                </div>
+                            {response.status=="success"&&
+                                <pre className="mt-2">
+                                    Name : {response.name}{'\n'}
+                                    Waktu Tunggu : {response.waktu_tunggu}{'\n'}
+                                    Waktu Tunggu (Simulasi) : {response.waktu_tunggu_simulasi}
+                                </pre>
                             }
                         </div>
                     </div>

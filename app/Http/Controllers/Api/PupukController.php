@@ -217,15 +217,14 @@ class PupukController extends Controller
         $options=[
             'modbus_url'    =>$req['modbus_url'],
             'modbus_port'   =>$req['modbus_port'],
-            'time'          =>$req['time']
+            'name'          =>"valve_1",
+            'sensor_selected'   =>true,
+            'address'       =>$req['address'],
+            'waktu_buka'    =>$req['waktu_buka']
         ];
-        $process_rabuk=GeneralHelper::process_mv_time("urea", 10, $options);
+        $process_rabuk=GeneralHelper::process_mv_time("urea", $options);
 
-        return response()->json([
-            'waktu_tunggu'  =>$process_rabuk['waktu_tunggu'],
-            'waktu_tunggu_plus_tutup'   =>$process_rabuk['waktu_tunggu_plus_tutup'],
-            'waktu_tunggu_simulasi' =>$process_rabuk['waktu_tunggu_simulasi']
-        ]);
+        return response()->json($process_rabuk);
     }
 
     public function simulate_weight(Request $request)
