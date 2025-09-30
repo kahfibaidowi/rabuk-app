@@ -250,11 +250,6 @@ class GeneralHelper{
         //-----------------------------
 
         //params
-        $motor_dipilih=16;
-        $motor_tertutup=4;
-
-        //waktu buka
-        $waktu_buka=$options['time'];
 
         //iot control modbus
         Endian::$defaultEndian=Endian::BIG_ENDIAN;
