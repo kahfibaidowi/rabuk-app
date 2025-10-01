@@ -81,7 +81,7 @@ const MySwal=withReactContent(swal)
 export default function Page(props) {
 
     const [form_input, setFormInput]=useState({
-        modbus_url:"192.168.1.101",
+        modbus_url:"127.0.0.1",
         modbus_port:"502",
         address:"40029",
         address_irigasi:"40033",
@@ -109,7 +109,8 @@ export default function Page(props) {
     const options_modbus_url=()=>{
         const default_data=[
             {label:"127.0.0.1", value:"127.0.0.1"},
-            {label:"10.10.1.2", value:"10.10.1.2"}
+            {label:"10.10.1.2", value:"10.10.1.2"},
+            {label:"192.168.1.101", value:"192.168.1.101"}
         ]
 
         return default_data

@@ -109,7 +109,8 @@ export default function Page(props) {
     const options_modbus_url=()=>{
         const default_data=[
             {label:"127.0.0.1", value:"127.0.0.1"},
-            {label:"10.10.1.2", value:"10.10.1.2"}
+            {label:"10.10.1.2", value:"10.10.1.2"},
+            {label:"192.168.1.101", value:"192.168.1.101"}
         ]
 
         return default_data
@@ -232,8 +233,8 @@ export default function Page(props) {
                                         <Label className="col-span-2">Step (detik)</Label>
                                         <div className="flex flex-col col-span-3">
                                             <NumericFormat 
-                                                value={formik.values.waktu_buka} 
-                                                onValueChange={(values)=>formik.setFieldValue("waktu_buka", values.value)}
+                                                value={formik.values.step_detik} 
+                                                onValueChange={(values)=>formik.setFieldValue("step_detik", values.value)}
                                                 customInput={Input} 
                                                 thousandSeparator 
                                                 className="pr-10 w-full" 
