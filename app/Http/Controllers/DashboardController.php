@@ -108,4 +108,13 @@ class DashboardController extends Controller
             'lahan_id'  =>isset($req['lahan_id'])?trim($req['lahan_id']):""
         ]);
     }
+
+    public function simulate_irigasi(Request $request): Response
+    {
+        $req=$request->all();
+
+        return Inertia::render('simulate_rabuk/irigasi', [
+            'lahan_id'  =>isset($req['lahan_id'])?trim($req['lahan_id']):""
+        ]);
+    }
 }

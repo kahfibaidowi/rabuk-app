@@ -281,12 +281,35 @@ class PupukController extends Controller
             'name'          =>"valve_1",
             'sensor_selected'   =>true,
             'address'       =>$req['address'],
-            'waktu_buka'    =>$req['waktu_buka']
+            'waktu_buka'    =>$req['waktu_buka'],
             'step_detik'    =>$req['step_detik']
         ];
 
         //process
         $process_rabuk=GeneralHelper::process_mv_step("urea", $options_valve_1);
+
+        //return
+        return response()->json($process_rabuk);
+    }
+
+    public function simulate_irigasi(Request $request)
+    {
+        // $login_data=$request->user();
+        $req=$request->all();
+
+        //variable
+        $options_valve_1=[
+            'modbus_url'    =>$req['modbus_url'],
+            'modbus_port'   =>$req['modbus_port'],
+            'name'          =>"valve_1",
+            'sensor_selected'   =>true,
+            'address'       =>$req['address'],
+            'address_irigasi'   =>$req['address_irigasi'],
+            'waktu_buka'    =>$req['waktu_buka']
+        ];
+
+        //process
+        $process_rabuk=GeneralHelper::process_mv_irigasi("urea", $options_valve_1);
 
         //return
         return response()->json($process_rabuk);

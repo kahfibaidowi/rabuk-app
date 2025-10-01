@@ -140,4 +140,7 @@ export const pupuk_request={
     simulate_step:async(params)=>{
         return await axios.post("/api/pupuk/simulate_step", params).then(res=>res.data)
     },
+    simulate_irigasi:async(params)=>{
+        return await axios.post("/api/pupuk/simulate_irigasi", params).then(res=>res.data)
+    }
 }

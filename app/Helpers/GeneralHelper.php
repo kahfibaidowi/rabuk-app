@@ -559,7 +559,7 @@ class GeneralHelper{
 
                 $result=$binaryData->sendAndReceive($packet2);
                 $date_2=microtime(true)/1000;
-                usleep(3*1000*1000)
+                usleep(3*1000*1000);
 
                 $waktu_eksekusi+=($date_2-$date_1)*1000;
             }
@@ -580,6 +580,141 @@ class GeneralHelper{
             'name'          =>$list['name'],
             'waktu_tunggu'  =>$waktu_buka,
             'waktu_tunggu_simulasi' =>$waktu_eksekusi
+        ];
+    }
+
+    public static function process_mv_irigasi($type="urea", $options){
+        //params
+
+        //iot control modbus
+        Endian::$defaultEndian=Endian::BIG_ENDIAN;
+        $list=[
+            'modbus_url'    =>$options['modbus_url'],
+            'modbus_port'   =>$options['modbus_port'],
+            'name'          =>$options['name'],
+            'sensor_selected'   =>$options['sensor_selected'],
+            'address'       =>$options['address'],
+            'address_irigasi'   =>$options['address_irigasi'],
+            'waktu_buka'    =>$options['waktu_buka']
+        ];
+
+        //kondisi
+        if(!$list['sensor_selected']){
+            return [
+                'status'        =>"sensor_not_selected",
+                'name'          =>$list['name'],
+                'waktu_tunggu'  =>"",
+                'waktu_tunggu_simulasi' =>""
+            ];
+        }
+
+        $connection=BinaryStreamConnection::getBuilder()
+            ->setPort($list['modbus_port'])
+            ->setHost($list['modbus_url'])
+            ->setConnectTimeoutSec(5)
+            ->setWriteTimeoutSec(30)
+            ->setReadTimeoutSec(30)
+            ->build();
+
+        $type=substr($list['address'], 0, 1);
+        $startAddress=(int)(substr($list['address'], 1));
+        $startAddress=$startAddress-1;
+
+        $type_irigasi=substr($list['address_irigasi'], 0, 1);
+        $startAddress_irigasi=(int)(substr($list['address_irigasi'], 1));
+        $startAddress_irigasi=$startAddress_irigasi-1;
+
+        $unitID=1;
+        $waktu_buka=$list['waktu_buka'];
+        $waktu_buka_half=$list['waktu_buka']/2;
+
+        if($type=="4"){
+            $registers=[Types::toReal(1)];
+            $registers2=[Types::toReal(0)];
+
+            $packet=new WriteMultipleRegistersRequest($startAddress, $registers, $unitID);
+            $packet2=new WriteMultipleRegistersRequest($startAddress, $registers2, $unitID);
+        }
+        else{
+            $coil=true;
+            $coil2=false;
+
+            $packet=new WriteSingleCoilRequest($startAddress, $coil, $unitID);
+            $packet2=new WriteSingleCoilRequest($startAddress, $coil2, $unitID);
+        }
+
+        if($type_irigasi=="4"){
+            $registers=[Types::toReal(1)];
+            $registers2=[Types::toReal(0)];
+
+            $packet_irigasi=new WriteMultipleRegistersRequest($startAddress_irigasi, $registers, $unitID);
+            $packet2_irigasi=new WriteMultipleRegistersRequest($startAddress_irigasi, $registers2, $unitID);
+        }
+        else{
+            $coil=true;
+            $coil2=false;
+
+            $packet_irigasi=new WriteSingleCoilRequest($startAddress_irigasi, $coil, $unitID);
+            $packet2_irigasi=new WriteSingleCoilRequest($startAddress_irigasi, $coil2, $unitID);
+        }
+
+        $waktu_eksekusi="";
+        $waktu_tunggu_sebelum_pemupukan="";
+        $waktu_tunggu_sesudah_pemupukan="";
+        $status="error";
+        try {
+            $binaryData = $connection->connect();
+            $sleep=ceil($waktu_buka*1000*1000);
+            $sleep_irigasi=ceil($waktu_buka_half*1000*1000);
+
+            //step 1 (irigasi - sebelum pemupukan)
+            $result=$binaryData->sendAndReceive($packet_irigasi);
+            $date_1_sebelum_pemupukan=microtime(true)/1000;
+            usleep($sleep_irigasi); //sleep
+
+            $result=$binaryData->sendAndReceive($packet2_irigasi);
+            $date_2_sebelum_pemupukan=microtime(true)/1000;
+            usleep(2*1000*1000);
+
+            //step 2 (pemupukan)
+            $result=$binaryData->sendAndReceive($packet);
+            $date_1=microtime(true)/1000;
+            usleep($sleep); //sleep
+
+            $result=$binaryData->sendAndReceive($packet2);
+            $date_2=microtime(true)/1000;
+            usleep(2*1000*1000);
+
+            //step 3 (irigasi - sesudah pemupukan)
+            $result=$binaryData->sendAndReceive($packet_irigasi);
+            $date_1_sesudah_pemupukan=microtime(true)/1000;
+            usleep($sleep_irigasi); //sleep
+
+            $result=$binaryData->sendAndReceive($packet2_irigasi);
+            $date_2_sesudah_pemupukan=microtime(true)/1000;
+            usleep(2*1000*1000);
+
+            //hasil
+            $waktu_eksekusi=($date_2-$date_1)*1000;
+            $waktu_tunggu_sebelum_pemupukan=($date_2_sebelum_pemupukan-$date_1_sebelum_pemupukan)*1000;
+            $waktu_tunggu_sesudah_pemupukan=($date_2_sesudah_pemupukan-$date_1_sesudah_pemupukan)*1000;
+            $status="success";
+        }
+        catch(\Exception $exception) {
+            echo 'An exception occurred'."<br/>";
+            echo $exception->getMessage()."<br/>";
+            echo $exception->getTraceAsString()."<br/>";
+        }
+        finally{
+            $connection->close();
+        }
+
+        return [
+            'status'        =>$status,
+            'name'          =>$list['name'],
+            'waktu_tunggu_simulasi' =>$waktu_eksekusi,
+            'waktu_tunggu_irigasi_sebelum_pemupukan_simulasi'   =>$waktu_tunggu_sebelum_pemupukan,
+            'waktu_tunggu_irigasi_sesudah_pemupukan_simulasi'   =>$waktu_tunggu_sesudah_pemupukan
         ];
     }
 }
