@@ -100,7 +100,7 @@ export default function Page(props) {
                 if(err.response.data?.error=="VALIDATION_ERROR")
                     toast.error(err.response.data.data, {position:"bottom-center"})
                 else
-                    toast.error("Insert Data Failed! ", {position:"bottom-center"})
+                    toast.error("Process Data Failed! ", {position:"bottom-center"})
             }
         })
 

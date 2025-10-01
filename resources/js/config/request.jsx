@@ -137,4 +137,7 @@ export const pupuk_request={
     simulate_weight:async(params)=>{
         return await axios.post("/api/pupuk/simulate_weight", params).then(res=>res.data)
     },
+    simulate_step:async(params)=>{
+        return await axios.post("/api/pupuk/simulate_step", params).then(res=>res.data)
+    },
 }

@@ -99,4 +99,13 @@ class DashboardController extends Controller
             'lahan_id'  =>isset($req['lahan_id'])?trim($req['lahan_id']):""
         ]);
     }
+    
+    public function simulate_step(Request $request): Response
+    {
+        $req=$request->all();
+
+        return Inertia::render('simulate_rabuk/step', [
+            'lahan_id'  =>isset($req['lahan_id'])?trim($req['lahan_id']):""
+        ]);
+    }
 }

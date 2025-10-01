@@ -41,6 +41,7 @@ Route::get('/lahan/cek_tanaman', [DashboardController::class, 'cek_tanaman']);
 Route::get('/simulate_rabuk', [DashboardController::class, 'simulate_rabuk']);
 Route::get('/simulate_time', [DashboardController::class, 'simulate_time']);
 Route::get('/simulate_weight', [DashboardController::class, 'simulate_weight']);
+Route::get('/simulate_step', [DashboardController::class, 'simulate_step']);
 
 //API ROUTE
 Route::middleware(["api"])->prefix("/api")->group(base_path('routes/api.php'));

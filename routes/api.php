@@ -35,4 +35,5 @@ Route::controller(PupukController::class)->prefix("/pupuk")->group(function(){
     Route::post("/simulate_rabuk", "simulate_rabuk");
     Route::post("/simulate_time", "simulate_time");
     Route::post("/simulate_weight", "simulate_weight");
+    Route::post("/simulate_step", "simulate_step");
 });

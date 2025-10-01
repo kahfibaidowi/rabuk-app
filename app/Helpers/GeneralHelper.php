@@ -469,4 +469,117 @@ class GeneralHelper{
             'waktu_tunggu_simulasi' =>$waktu_eksekusi
         ];
     }
+
+    public static function process_mv_step($type="urea", $options){
+        //options params
+        // $options=[
+        //     'modbus_url',
+        //     'modbus_port',
+        //     'urea_gram',
+        //     'urea_v_liter',
+        //     'mkp_gram',
+        //     'mkp_v_liter',
+        //     'kcl_gram',
+        //     'kcl_v_liter',
+        //     'time'
+        // ];
+
+
+        //-----------------------------
+
+        //params
+
+        //iot control modbus
+        Endian::$defaultEndian=Endian::BIG_ENDIAN;
+        $list=[
+            'modbus_url'    =>$options['modbus_url'],
+            'modbus_port'   =>$options['modbus_port'],
+            'name'          =>$options['name'],
+            'sensor_selected'   =>$options['sensor_selected'],
+            'address'       =>$options['address'],
+            'waktu_buka'    =>$options['waktu_buka'],
+            'step_detik'    =>$options['step_detik']
+        ];
+
+        //kondisi
+        if(!$list['sensor_selected']){
+            return [
+                'status'        =>"sensor_not_selected",
+                'name'          =>$list['name'],
+                'waktu_tunggu'  =>"",
+                'waktu_tunggu_simulasi' =>""
+            ];
+        }
+
+        $connection=BinaryStreamConnection::getBuilder()
+            ->setPort($list['modbus_port'])
+            ->setHost($list['modbus_url'])
+            ->setConnectTimeoutSec(5)
+            ->setWriteTimeoutSec(30)
+            ->setReadTimeoutSec(30)
+            ->build();
+
+        $type=substr($list['address'], 0, 1);
+        $startAddress=(int)(substr($list['address'], 1));
+        $startAddress=$startAddress-1;
+        $unitID=1;
+        $waktu_buka=$list['waktu_buka'];
+        $step_detik=$list['step_detik'];
+        $step=ceil($list['waktu_buka']/$list['step_detik']);
+
+        if($type=="4"){
+            $registers=[Types::toReal(1)];
+            $packet=new WriteMultipleRegistersRequest($startAddress, $registers, $unitID);
+
+            $registers2=[Types::toReal(0)];
+            $packet2=new WriteMultipleRegistersRequest($startAddress, $registers2, $unitID);
+        }
+        else{
+            $coil=true;
+            $packet=new WriteSingleCoilRequest($startAddress, $coil, $unitID);
+
+            $coil2=false;
+            $packet2=new WriteSingleCoilRequest($startAddress, $coil2, $unitID);
+        }
+
+        $waktu_eksekusi="";
+        $status="error";
+        try {
+            $binaryData = $connection->connect();
+            $sleep=ceil($step_detik*1000*1000);
+
+            for($i=1; $i<=$step; $i++){
+                if($i==1){
+                    $waktu_eksekusi=0;
+                }
+                
+                $result=$binaryData->sendAndReceive($packet);
+                $date_1=microtime(true)/1000;
+                usleep($sleep); //sleep
+
+                $result=$binaryData->sendAndReceive($packet2);
+                $date_2=microtime(true)/1000;
+                usleep(3*1000*1000)
+
+                $waktu_eksekusi+=($date_2-$date_1)*1000;
+            }
+            
+            $status="success";
+        }
+        catch(\Exception $exception) {
+            echo 'An exception occurred'."<br/>";
+            echo $exception->getMessage()."<br/>";
+            echo $exception->getTraceAsString()."<br/>";
+        }
+        finally{
+            $connection->close();
+        }
+
+        return [
+            'status'        =>$status,
+            'name'          =>$list['name'],
+            'waktu_tunggu'  =>$waktu_buka,
+            'waktu_tunggu_simulasi' =>$waktu_eksekusi
+        ];
+    }
 }
