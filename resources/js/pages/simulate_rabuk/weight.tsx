@@ -54,7 +54,7 @@ import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
 import {Select as ReactSelect} from "@/components/select-form"
-import { ArrowRight, ChevronLeftIcon, ChevronRightIcon, ChevronsLeftIcon, ChevronsRightIcon, Edit2, Ellipsis, Filter, Plus, PlusIcon, Trash2 } from "lucide-react"
+import { ArrowRight, ChevronLeftIcon, ChevronRightIcon, ChevronsLeftIcon, ChevronsRightIcon, Edit2, Ellipsis, Filter, Minus, MinusIcon, Plus, PlusIcon, Trash2 } from "lucide-react"
 import { NumericFormat } from 'react-number-format'
 
 import { toast } from "sonner"
@@ -103,14 +103,14 @@ export default function Page(props) {
 
     //DATA/MUTATION
     const simulate_data=useMutation({
-            mutationFn:params=>pupuk_request.simulate_weight(params),
-            onError:err=>{
-                if(err.response.data?.error=="VALIDATION_ERROR")
-                    toast.error(err.response.data.data, {position:"bottom-center"})
-                else
-                    toast.error("Process Data Failed! ", {position:"bottom-center"})
-            }
-        })
+        mutationFn:params=>pupuk_request.simulate_weight(params),
+        onError:err=>{
+            if(err.response.data?.error=="VALIDATION_ERROR")
+                toast.error(err.response.data.data, {position:"bottom-center"})
+            else
+                toast.error("Process Data Failed! ", {position:"bottom-center"})
+        }
+    })
 
     //VALUES
     const options_modbus_url=()=>{
@@ -235,28 +235,42 @@ export default function Page(props) {
                                                 allowNegative={false}
                                                 allowLeadingZeros
                                                 maxLength={5}
+                                                step={100}
                                                 placeholder="Modbus Address | 400XX"
                                                 disabled={!formik.values.sensor_selected_v1}
                                             />
                                             <div className="relative flex">
-                                                <div className="absolute inset-y-0 end-0 flex items-center pe-3.5 pointer-events-none text-sm">
-                                                    ml
-                                                </div>
-                                                
+                                                <Button
+                                                    type="button"
+                                                    variant="secondary"
+                                                    className="rounded-r-none"
+                                                    onClick={e=>formik.setFieldValue("berat_rabuk_v1", Math.max(0, formik.values.berat_rabuk_v1-100))}
+                                                    disabled={!formik.values.sensor_selected_v1}
+                                                >
+                                                    <MinusIcon/>
+                                                </Button>
                                                 <NumericFormat 
                                                     value={formik.values.berat_rabuk_v1} 
                                                     onValueChange={(values)=>formik.setFieldValue("berat_rabuk_v1", values.value)}
                                                     customInput={Input} 
                                                     thousandSeparator 
-                                                    className="pr-10 w-full" 
+                                                    className="text-center w-full rounded-none" 
                                                     decimalScale={0}
                                                     allowNegative={false}
-                                                    isAllowed={(values)=>{
-                                                        return values.value<=2000
-                                                    }}
-                                                    placeholder="Berat Rabuk | 0-2000"
-                                                disabled={!formik.values.sensor_selected_v1}
+                                                    placeholder="Berat Rabuk"
+                                                    disabled={!formik.values.sensor_selected_v1}
+                                                    suffix=" ml"
+                                                    
                                                 />
+                                                <Button
+                                                    type="button"
+                                                    variant="secondary"
+                                                    className="rounded-l-none"
+                                                    onClick={e=>formik.setFieldValue("berat_rabuk_v1", Math.max(0, Number(formik.values.berat_rabuk_v1)+100))}
+                                                    disabled={!formik.values.sensor_selected_v1}
+                                                >
+                                                    <PlusIcon/>
+                                                </Button>
                                             </div>
                                         </div>
                                     </div>
@@ -285,24 +299,37 @@ export default function Page(props) {
                                                 disabled={!formik.values.sensor_selected_v2}
                                             />
                                             <div className="relative flex">
-                                                <div className="absolute inset-y-0 end-0 flex items-center pe-3.5 pointer-events-none text-sm">
-                                                    ml
-                                                </div>
-                                                
+                                                <Button
+                                                    type="button"
+                                                    variant="secondary"
+                                                    className="rounded-r-none"
+                                                    onClick={e=>formik.setFieldValue("berat_rabuk_v2", Math.max(0, formik.values.berat_rabuk_v2-100))}
+                                                    disabled={!formik.values.sensor_selected_v2}
+                                                >
+                                                    <MinusIcon/>
+                                                </Button>
                                                 <NumericFormat 
                                                     value={formik.values.berat_rabuk_v2} 
                                                     onValueChange={(values)=>formik.setFieldValue("berat_rabuk_v2", values.value)}
                                                     customInput={Input} 
                                                     thousandSeparator 
-                                                    className="pr-10 w-full" 
+                                                    className="text-center w-full rounded-none" 
                                                     decimalScale={0}
                                                     allowNegative={false}
-                                                    isAllowed={(values)=>{
-                                                        return values.value<=2000
-                                                    }}
-                                                    placeholder="Berat Rabuk | 0-2000"
-                                                disabled={!formik.values.sensor_selected_v2}
+                                                    placeholder="Berat Rabuk"
+                                                    disabled={!formik.values.sensor_selected_v2}
+                                                    suffix=" ml"
+                                                    
                                                 />
+                                                <Button
+                                                    type="button"
+                                                    variant="secondary"
+                                                    className="rounded-l-none"
+                                                    onClick={e=>formik.setFieldValue("berat_rabuk_v2", Math.max(0, Number(formik.values.berat_rabuk_v2)+100))}
+                                                    disabled={!formik.values.sensor_selected_v2}
+                                                >
+                                                    <PlusIcon/>
+                                                </Button>
                                             </div>
                                         </div>
                                     </div>
@@ -330,25 +357,39 @@ export default function Page(props) {
                                                 placeholder="Modbus Address | 400XX"
                                                 disabled={!formik.values.sensor_selected_v3}
                                             />
+                                            
                                             <div className="relative flex">
-                                                <div className="absolute inset-y-0 end-0 flex items-center pe-3.5 pointer-events-none text-sm">
-                                                    ml
-                                                </div>
-                                                
+                                                <Button
+                                                    type="button"
+                                                    variant="secondary"
+                                                    className="rounded-r-none"
+                                                    onClick={e=>formik.setFieldValue("berat_rabuk_v3", Math.max(0, formik.values.berat_rabuk_v3-100))}
+                                                    disabled={!formik.values.sensor_selected_v3}
+                                                >
+                                                    <MinusIcon/>
+                                                </Button>
                                                 <NumericFormat 
                                                     value={formik.values.berat_rabuk_v3} 
                                                     onValueChange={(values)=>formik.setFieldValue("berat_rabuk_v3", values.value)}
                                                     customInput={Input} 
                                                     thousandSeparator 
-                                                    className="pr-10 w-full" 
+                                                    className="text-center w-full rounded-none" 
                                                     decimalScale={0}
                                                     allowNegative={false}
-                                                    isAllowed={(values)=>{
-                                                        return values.value<=2000
-                                                    }}
-                                                    placeholder="Berat Rabuk | 0-2000"
-                                                disabled={!formik.values.sensor_selected_v3}
+                                                    placeholder="Berat Rabuk"
+                                                    disabled={!formik.values.sensor_selected_v3}
+                                                    suffix=" ml"
+                                                    
                                                 />
+                                                <Button
+                                                    type="button"
+                                                    variant="secondary"
+                                                    className="rounded-l-none"
+                                                    onClick={e=>formik.setFieldValue("berat_rabuk_v3", Math.max(0, Number(formik.values.berat_rabuk_v3)+100))}
+                                                    disabled={!formik.values.sensor_selected_v3}
+                                                >
+                                                    <PlusIcon/>
+                                                </Button>
                                             </div>
                                         </div>
                                     </div>

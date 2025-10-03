@@ -1,0 +1,27 @@
+
+export const pompa_1_data=[
+    {waktu:0.5, output:150},
+    {waktu:1, output:250},
+    {waktu:2, output:500},
+    {waktu:3, output:750},
+    {waktu:4, output:1000},
+    {waktu:5, output:1200},
+    {waktu:6, output:1450},
+    {waktu:7, output:1700},
+    {waktu:8, output:1950},
+    {waktu:9, output:2200},
+    {waktu:10, output:2350},
+    {waktu:11, output:2550},
+    {waktu:12, output:2750},
+    {waktu:13, output:3000},
+    {waktu:14, output:3250},
+    {waktu:15, output:3500},
+    {waktu:16, output:3750},
+    {waktu:17, output:4000},
+    {waktu:18, output:4250},
+    {waktu:19, output:4500},
+    {waktu:20, output:4750},
+    {waktu:21, output:5000},
+    {waktu:22, output:5250},
+    {waktu:23, output:5350}
+]

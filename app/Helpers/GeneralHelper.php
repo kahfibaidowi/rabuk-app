@@ -371,37 +371,55 @@ class GeneralHelper{
         }
 
         //waktu buka
-        $waktu_buka=0;
-        if($list['berat_rabuk']<=100){
-            $waktu_buka=0.5;
+        $waktu_buka=$list['berat_rabuk']/100*0.4;
+        if($waktu_buka<=4){
+            $waktu_buka=$waktu_buka+0;
         }
-        else if($list['berat_rabuk']<=200){
-            $waktu_buka=1;
+        else if($waktu_buka<=9){
+            $waktu_buka=$waktu_buka+0.2;
         }
-        else if($list['berat_rabuk']<=400){
-            $waktu_buka=2;
+        else if($waktu_buka<=10){
+            $waktu_buka=$waktu_buka+0.6;
         }
-        else if($list['berat_rabuk']<=650){
-            $waktu_buka=3;
+        else if($waktu_buka<=11){
+            $waktu_buka=$waktu_buka+0.8
         }
-        else if($list['berat_rabuk']<=800){
-            $waktu_buka=4;
+        else if($waktu_buka<=22){
+            $waktu_buka=$waktu_buka+1;
         }
-        else if($list['berat_rabuk']<=1000){
-            $waktu_buka=5;
+        else if($waktu_buka>22){
+            $waktu_buka=$waktu_buka+1.6
         }
-        else if($list['berat_rabuk']<=1350){
-            $waktu_buka=6;
-        }
-        else if($list['berat_rabuk']<=1550){
-            $waktu_buka=7;
-        }
-        else if($list['berat_rabuk']<=1800){
-            $waktu_buka=8;
-        }
-        else if($list['berat_rabuk']<=2000){
-            $waktu_buka=9;
-        }
+        // if($list['berat_rabuk']<=100){
+        //     $waktu_buka=0.5;
+        // }
+        // else if($list['berat_rabuk']<=200){
+        //     $waktu_buka=1;
+        // }
+        // else if($list['berat_rabuk']<=400){
+        //     $waktu_buka=2;
+        // }
+        // else if($list['berat_rabuk']<=650){
+        //     $waktu_buka=3;
+        // }
+        // else if($list['berat_rabuk']<=800){
+        //     $waktu_buka=4;
+        // }
+        // else if($list['berat_rabuk']<=1000){
+        //     $waktu_buka=5;
+        // }
+        // else if($list['berat_rabuk']<=1350){
+        //     $waktu_buka=6;
+        // }
+        // else if($list['berat_rabuk']<=1550){
+        //     $waktu_buka=7;
+        // }
+        // else if($list['berat_rabuk']<=1800){
+        //     $waktu_buka=8;
+        // }
+        // else if($list['berat_rabuk']<=2000){
+        //     $waktu_buka=9;
+        // }
         // else if($list['berat_rabuk']>2000){
         //     $sisa=$list['berat_rabuk']-2000;
         //     $waktu_tambahan=$sisa/250;
