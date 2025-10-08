@@ -684,29 +684,58 @@ const DosisPupukPerTanaman=({last_data, lahan, setFilter, filter})=>{
         const dosis=Math.max(0, (skn(item)*100)/konsentrasi.urea_n)
         return _lod.ceil(dosis, decimal_scale)
     }
-    const dosis_mkp=(item)=>{
+    const dosis_mkp_p=(item)=>{
         const dosis=Math.max(0, (skp(item)*100)/konsentrasi.mkp_p)
         return _lod.ceil(dosis, decimal_scale)
     }
-    const dosis_kcl=(item)=>{
-        //nilai kcl
-        const kcl_g=Math.max(0, (skk(item)*100)/konsentrasi.kcl_k)
-        //karena mkp mengandung unsur K 28.7%, convert hasil mkp dari p ke k
-        const mkp_p_to_k_g=dosis_mkp(item)*(konsentrasi.mkp_k/konsentrasi.mkp_p)
-
-        //kcl dikurangi k dari mkp
-        const dosis=Math.max(0, (kcl_g-mkp_p_to_k_g))
+    const dosis_mkp_k=(item)=>{
+        //nilai mkp_k
+        const dosis=Math.max(0, (skk(item)*100)/konsentrasi.mkp_k)
         return _lod.ceil(dosis, decimal_scale)
     }
-    const k_berlebih=(item)=>{
-        //nilai kcl
-        const kcl_g=Math.max(0, (skk(item)*100)/konsentrasi.kcl_k)
-        //karena mkp mengandung unsur K 28.7%, convert hasil mkp dari p ke k
-        const mkp_p_to_k_g=dosis_mkp(item)*(konsentrasi.mkp_k/konsentrasi.mkp_p)
+    const dosis_mkp=(item)=>{
+        const mkp_p=dosis_mkp_p(item)
+        const mkp_k=dosis_mkp_k(item)
 
-        //kcl dikurangi k dari mkp
-        const dosis=kcl_g-mkp_p_to_k_g
-        return _lod.ceil(dosis, decimal_scale)
+        let mkp_p_k=mkp_p*(konsentrasi.mkp_k/konsentrasi.mkp_p)
+        mkp_p_k=_lod.ceil(mkp_p_k, decimal_scale)
+
+        if(mkp_k>mkp_p_k){
+            return mkp_k
+        }
+        return mkp_p
+    }
+    const unsur_berlebih=(item)=>{
+        const mkp_p=dosis_mkp_p(item)
+        const mkp_k=dosis_mkp_k(item)
+        
+        let mkp_p_k=mkp_p*(konsentrasi.mkp_k/konsentrasi.mkp_p)
+        mkp_p_k=_lod.ceil(mkp_p_k, decimal_scale)
+
+        if(mkp_k==mkp_p_k){
+            return false
+        }
+
+        if(mkp_k>mkp_p_k){
+            let mkp_k_p=mkp_k*(konsentrasi.mkp_p/konsentrasi.mkp_k)
+            mkp_k_p=_lod.ceil(mkp_k_p, decimal_scale)
+
+            let kelebihan_p=mkp_k_p-mkp_p
+            kelebihan_p=_lod.ceil(kelebihan_p, decimal_scale)
+
+            return {
+                unsur:"Phosphor",
+                value_data:kelebihan_p,
+                penjelasan:`(P) mkp_k = ${mkp_k} x (${konsentrasi.mkp_p} / ${konsentrasi.mkp_k}) = ${mkp_k_p}\nHasil Akhir = ${mkp_k_p} - ${mkp_p} = ${kelebihan_p}`
+            }
+        }
+
+        let kelebihan_k=_lod(mkp_p_k-mkp_k, decimal_scale)
+        return {
+            unsur:"Kalium",
+            value_data:kelebihan_k,
+            penjelasan:`(K) mkp_p = ${mkp_p} x (${konsentrasi.mkp_k} / ${konsentrasi.mkp_p}) = ${mkp_p_k}\nHasil Akhir = ${mkp_p_k} - ${mkp_k} = ${kelebihan_k}`
+        }
     }
 
 
@@ -746,10 +775,10 @@ const DosisPupukPerTanaman=({last_data, lahan, setFilter, filter})=>{
                                         <div className="flex flex-col items-center justify-center -mt-12">
                                             <div className="w-36 h-36 bg-white dark:bg-accent rounded-full shadow-lg px-2 flex items-center justify-center">
                                                 <span className="text-center text-xl font-bold">
-                                                    {dosis_mkp(last_data)}<br/>gram
+                                                    {dosis_mkp_p(last_data)}<br/>gram
                                                 </span>
                                             </div>
-                                            <span className="text-xl font-bold mt-5 text-gray-800">MKP</span>
+                                            <span className="text-xl font-bold mt-5 text-gray-800">MKP Phosphor</span>
                                         </div>
                                         <div className="mt-5 bg-white dark:bg-accent rounded-2xl px-6 py-3 flex flex-col items-center justify-center">
                                             <div className="text-center">
@@ -758,7 +787,7 @@ const DosisPupukPerTanaman=({last_data, lahan, setFilter, filter})=>{
                                                 <strong>34% K₂O = 28.7% K</strong>
                                             </div>
                                             <div className="w-full border-b dark:border-gray-500 mt-2"></div>
-                                            <div className="mt-5 text-center">Dosis MKP = <strong>{dosis_mkp(last_data)} gram</strong> per tanaman</div>
+                                            <div className="mt-5 text-center">Dosis MKP = <strong>{dosis_mkp_p(last_data)} gram</strong> per tanaman</div>
                                         </div>
                                     </div>
                                 </div>
@@ -767,24 +796,25 @@ const DosisPupukPerTanaman=({last_data, lahan, setFilter, filter})=>{
                                         <div className="flex flex-col items-center justify-center -mt-12">
                                             <div className="w-36 h-36 bg-white dark:bg-accent rounded-full shadow-lg px-2 flex items-center justify-center">
                                                 <span className="text-center text-xl font-bold">
-                                                    {dosis_kcl(last_data)}<br/>gram
+                                                    {dosis_mkp_k(last_data)}<br/>gram
                                                 </span>
                                             </div>
-                                            <span className="text-xl font-bold mt-5 text-gray-800">KCL</span>
+                                            <span className="text-xl font-bold mt-5 text-gray-800">MKP Kalium</span>
                                         </div>
                                         <div className="mt-5 bg-white dark:bg-accent rounded-2xl px-6 py-3 flex flex-col items-center justify-center">
                                             <div className="text-center">
                                                 Kandungan Pupuk<br/>
-                                                <strong>60% K₂O = 50% K</strong>
+                                                <strong>52% P₂O₅ = 22.7% P</strong>,{' '}
+                                                <strong>34% K₂O = 28.7% K</strong>
                                             </div>
                                             <div className="w-full border-b dark:border-gray-500 mt-2"></div>
-                                            <div className="mt-5 text-center">Dosis KCL = <strong>{dosis_kcl(last_data)} gram</strong> per tanaman</div>
+                                            <div className="mt-5 text-center">Dosis MKP = <strong>{dosis_mkp_k(last_data)} gram</strong> per tanaman</div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div className="mt-10">
-                                {k_berlebih(last_data)<0?
+                                {unsur_berlebih(last_data)!==false?
                                     <div className="py-5 px-5 mb-4 text-red-800 border border-red-300 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400 dark:border-red-800" role="alert">
                                         <div className="flex items-center">
                                             <svg className="shrink-0 w-4 h-4 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
@@ -794,7 +824,10 @@ const DosisPupukPerTanaman=({last_data, lahan, setFilter, filter})=>{
                                             <h3 className="text-lg font-medium">Peringatan Pemupukan</h3>
                                         </div>
                                         <div className="mt-2 mb-4 text-sm">
-                                            Dari hasil perhitungan pada faktor Kalium, Setelah dikurangi dengan kandungan pada pupuk KCl, Terdapat kelebihan Kalium pada pupuk MKP sebesar <strong>±{Math.abs(k_berlebih(last_data))} gram</strong>!
+                                            Dari hasil perhitungan Pupuk MKP, Setelah dikalkulasi, Terdapat kelebihan <strong>{unsur_berlebih(last_data).unsur}</strong> pada pupuk MKP sebesar <strong>±{unsur_berlebih(last_data).value_data.toString()} gram</strong>!<br/>
+                                            <div className="whitespace-pre-wrap mt-2">
+                                                {unsur_berlebih(last_data).penjelasan}
+                                            </div>
                                         </div>
                                         <div className="flex">
                                             <Button 
@@ -852,15 +885,14 @@ const DosisPupukPerTanaman=({last_data, lahan, setFilter, filter})=>{
                                 <strong className="text-lg leading-6">Pupuk sesuai data, bukan kira-kira. Dengan pupuk sekarang, semua jadi otomatis dan akurat!</strong>
                                 
                                 <Formik
-                                    initialValues={{urea:true, mkp:false,kcl:false, jumlah_tanaman:lahan.data.data.jumlah_tanaman}}
+                                    initialValues={{urea:true, mkp:false, jumlah_tanaman:lahan.data.data.jumlah_tanaman}}
                                     onSubmit={(values, actions)=>{
                                         const new_lahan=lahan.data.data
                                         const new_values=Object.assign({}, values, {
                                             lahan_id:lahan_id,
                                             usia_tanaman:countMonth(new_lahan.tgl_tanam, format(new Date(), "yyyy-MM-dd")),
                                             dosis_urea:values.urea?dosis_urea(last_data):"",
-                                            dosis_mkp:values.mkp?dosis_mkp(last_data):"",
-                                            dosis_kcl:values.kcl?dosis_kcl(last_data):""
+                                            dosis_mkp:values.mkp?dosis_mkp(last_data):""
                                         })
         
                                         tambah_data.mutate(new_values, {
@@ -897,19 +929,6 @@ const DosisPupukPerTanaman=({last_data, lahan, setFilter, filter})=>{
                                                     <div className="grid gap-1.5 font-normal">
                                                         <p className="text-base text-gray-800 leading-none font-medium">
                                                             MKP <strong>{dosis_mkp(last_data)*formik.values.jumlah_tanaman}</strong> gram
-                                                        </p>
-                                                    </div>
-                                                </Label>
-                                                <Label className="bg-white border-white flex items-start gap-3 rounded-lg border p-3 py-2.5 has-[[aria-checked=true]]:border-orange-600 has-[[aria-checked=true]]:bg-orange-400 dark:has-[[aria-checked=true]]:border-orange-600 dark:has-[[aria-checked=true]]:bg-orange-400">
-                                                    <Checkbox
-                                                        id="toggle-2"
-                                                        defaultChecked={formik.values.kcl}
-                                                        className="data-[state=checked]:border-green-600 data-[state=checked]:bg-green-600 data-[state=checked]:text-white dark:data-[state=checked]:border-green-700 dark:data-[state=checked]:bg-green-700"
-                                                        onCheckedChange={e=>formik.setFieldValue("kcl", e)}
-                                                    />
-                                                    <div className="grid gap-1.5 font-normal">
-                                                        <p className="text-base text-gray-800 leading-none font-medium">
-                                                            KCl <strong>{dosis_kcl(last_data)*formik.values.jumlah_tanaman}</strong> gram
                                                         </p>
                                                     </div>
                                                 </Label>
@@ -993,13 +1012,6 @@ const DataPupuk=({dataSource, filter, setFilter})=>{
                                         header:"Dosis MKP",
                                         renderItem:(item)=>(
                                             <>{!_.isNull(item.dosis_mkp)?<><strong>{(item.dosis_mkp*item.jumlah_tanaman).toFixed(2)*1}</strong> gram</>:<XCircle className="text-red-600"/>}</>
-                                        )
-                                    },
-                                    {
-                                        headerClassName:"w-[150px]",
-                                        header:"Dosis KCl",
-                                        renderItem:(item)=>(
-                                            <>{!_.isNull(item.dosis_kcl)?<><strong>{(item.dosis_kcl*item.jumlah_tanaman).toFixed(2)*1}</strong> gram</>:<XCircle className="text-red-600"/>}</>
                                         )
                                     },
                                     {

@@ -37,8 +37,7 @@ class PupukController extends Controller
             'usia_tanaman'  =>"required|integer",
             'jumlah_tanaman'=>"required|integer",
             "dosis_urea"    =>"present",
-            "dosis_mkp"    =>"present",
-            "dosis_kcl"     =>"present"
+            "dosis_mkp"    =>"present"
         ]);
         if($validation->fails()){
             return response()->json([
@@ -63,8 +62,7 @@ class PupukController extends Controller
                 'usia_tanaman'  =>$req['usia_tanaman'],
                 'jumlah_tanaman'=>$req['jumlah_tanaman'],
                 'dosis_urea'    =>$req['dosis_urea']!=""?$req['dosis_urea']:null,
-                'dosis_mkp'    =>$req['dosis_mkp']!=""?$req['dosis_mkp']:null,
-                'dosis_kcl'     =>$req['dosis_kcl']!=""?$req['dosis_kcl']:null
+                'dosis_mkp'    =>$req['dosis_mkp']!=""?$req['dosis_mkp']:null
             ]);
         });
 

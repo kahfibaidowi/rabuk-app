@@ -40,9 +40,7 @@ class LahanController extends Controller
             'urea_gram'     =>"required|integer|min:0",
             'urea_v_liter'  =>"required|integer|min:0",
             'mkp_gram'     =>"required|integer|min:0",
-            'mkp_v_liter'  =>"required|integer|min:0",
-            'kcl_gram'      =>"required|integer|min:0",
-            'kcl_v_liter'   =>"required|integer|min:0",
+            'mkp_v_liter'  =>"required|integer|min:0"
         ]);
         if($validation->fails()){
             return response()->json([
@@ -69,9 +67,7 @@ class LahanController extends Controller
                 'urea_gram'     =>$req['urea_gram'],
                 'urea_v_liter'  =>$req['urea_v_liter'],
                 'mkp_gram'     =>$req['mkp_gram'],
-                'mkp_v_liter'  =>$req['mkp_v_liter'],
-                'kcl_gram'      =>$req['kcl_gram'],
-                'kcl_v_liter'   =>$req['kcl_v_liter']
+                'mkp_v_liter'  =>$req['mkp_v_liter']
             ]);
         });
 
@@ -106,9 +102,7 @@ class LahanController extends Controller
             'urea_gram'     =>"required|integer|min:0",
             'urea_v_liter'  =>"required|integer|min:0",
             'mkp_gram'     =>"required|integer|min:0",
-            'mkp_v_liter'  =>"required|integer|min:0",
-            'kcl_gram'      =>"required|integer|min:0",
-            'kcl_v_liter'   =>"required|integer|min:0",
+            'mkp_v_liter'  =>"required|integer|min:0"
         ]);
         if($validation->fails()){
             return response()->json([
@@ -128,10 +122,8 @@ class LahanController extends Controller
                 'modbus_port'   =>$req['modbus_port'],
                 'urea_gram'     =>$req['urea_gram'],
                 'urea_v_liter'  =>$req['urea_v_liter'],
-                'mkp_gram'     =>$req['mkp_gram'],
-                'mkp_v_liter'  =>$req['mkp_v_liter'],
-                'kcl_gram'      =>$req['kcl_gram'],
-                'kcl_v_liter'   =>$req['kcl_v_liter']
+                'mkp_gram'      =>$req['mkp_gram'],
+                'mkp_v_liter'   =>$req['mkp_v_liter']
             ];
 
             LahanModel::where("id", $req['id'])

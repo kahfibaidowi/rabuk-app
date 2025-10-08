@@ -100,9 +100,7 @@ export default function Page(props) {
         urea_gram:"",
         urea_v_liter:"",
         mkp_gram:"",
-        mkp_v_liter:"",
-        kcl_gram:"",
-        kcl_v_liter:""
+        mkp_v_liter:""
     })
     const [provinces, setProvinces]=useState([])
     const [regencies, setRegencies]=useState([])
@@ -226,9 +224,7 @@ export default function Page(props) {
                                     urea_gram:yup.string().required(),
                                     urea_v_liter:yup.string().required(),
                                     mkp_gram:yup.string().required(),
-                                    mkp_v_liter:yup.string().required(),
-                                    kcl_gram:yup.string().required(),
-                                    kcl_v_liter:yup.string().required()
+                                    mkp_v_liter:yup.string().required()
                                 })
                             }
                             enableReinitialize
@@ -458,28 +454,6 @@ export default function Page(props) {
                                         <NumericFormat 
                                             value={formik.values.mkp_v_liter} 
                                             onValueChange={(values)=>formik.setFieldValue("mkp_v_liter", values.value)}
-                                            customInput={Input} 
-                                            thousandSeparator 
-                                            className="pr-10 w-full col-span-3" 
-                                            decimalScale={0}
-                                        />
-                                    </div>
-                                    <div className="grid grid-cols-4 items-center gap-4">
-                                        <Label>KCl gram</Label>
-                                        <NumericFormat 
-                                            value={formik.values.kcl_gram} 
-                                            onValueChange={(values)=>formik.setFieldValue("kcl_gram", values.value)}
-                                            customInput={Input} 
-                                            thousandSeparator 
-                                            className="pr-10 w-full col-span-3" 
-                                            decimalScale={0}
-                                        />
-                                    </div>
-                                    <div className="grid grid-cols-4 items-center gap-4">
-                                        <Label>KCl volume/liter</Label>
-                                        <NumericFormat 
-                                            value={formik.values.kcl_v_liter} 
-                                            onValueChange={(values)=>formik.setFieldValue("kcl_v_liter", values.value)}
                                             customInput={Input} 
                                             thousandSeparator 
                                             className="pr-10 w-full col-span-3" 

@@ -31,9 +31,7 @@ class LahanModel extends Model
        "urea_gram",
        "urea_v_liter",
        "mkp_gram",
-       "mkp_v_liter",
-       "kcl_gram",
-       "kcl_v_liter"
+       "mkp_v_liter"
     ];
    
    

@@ -18,7 +18,6 @@ return new class extends Migration
             $table->unsignedBigInteger("jumlah_tanaman");
             $table->double("dosis_urea")->nullable();
             $table->double("dosis_mkp")->nullable();
-            $table->double("dosis_kcl")->nullable();
             $table->timestamps();
         });
     }

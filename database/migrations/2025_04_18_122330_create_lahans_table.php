@@ -30,8 +30,6 @@ return new class extends Migration
             $table->unsignedInteger("urea_v_liter");
             $table->unsignedInteger("mkp_gram");
             $table->unsignedInteger("mkp_v_liter");
-            $table->unsignedInteger("kcl_gram");
-            $table->unsignedInteger("kcl_v_liter");
             $table->timestamps();
         });
 
