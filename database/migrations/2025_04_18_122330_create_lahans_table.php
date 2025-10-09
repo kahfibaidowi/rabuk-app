@@ -26,10 +26,8 @@ return new class extends Migration
             $table->string("modbus_url");
             $table->string("modbus_port");
             $table->string("modbus_status")->default("disconnected");
-            $table->unsignedInteger("urea_gram");
-            $table->unsignedInteger("urea_v_liter");
-            $table->unsignedInteger("mkp_gram");
-            $table->unsignedInteger("mkp_v_liter");
+            $table->unsignedInteger("urea_per_liter");
+            $table->unsignedInteger("mkp_per_liter");
             $table->timestamps();
         });
 

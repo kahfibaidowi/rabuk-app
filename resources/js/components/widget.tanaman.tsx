@@ -33,7 +33,7 @@ import { Badge } from './ui/badge'
 const WidgetTanaman=(props)=>{
 
     return (
-        <div className="w-full lg:w-1/2 xl:w-1/3 px-3 py-0">
+        <div className="w-full lg:w-1/2 xl:w-1/3 px-3 py-3">
             <div className="flex flex-col md:flex-row items-center bg-white dark:bg-sidebar rounded-2xl shadow-sm">
                 <div className="flex flex-col items-center w-full h-full bg-gradient-to-b from-green-400 to-emerald-100 dark:from-green-800 dark:to-emerald-700 rounded-t-xl md:rounded-l-xl md:rounded-t-none md:min-h-72 md:w-48">
                     <div className="w-28 h-28 my-5 rounded-full overflow-hidden xl:w-32 xl:h-32">

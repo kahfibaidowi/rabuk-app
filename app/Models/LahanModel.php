@@ -28,10 +28,8 @@ class LahanModel extends Model
        "modbus_url",
        "modbus_port",
        "modbus_status",
-       "urea_gram",
-       "urea_v_liter",
-       "mkp_gram",
-       "mkp_v_liter"
+       "urea_per_liter",
+       "mkp_per_liter"
     ];
    
    

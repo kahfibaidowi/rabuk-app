@@ -51,6 +51,30 @@ class GeneralHelper{
         return $ch_data;
     }
 
+    public static function valve_volume_to_time($volume){
+        $waktu_buka=$volume/100*0.4;
+        if($waktu_buka<=4){
+            $waktu_buka=$waktu_buka+0;
+        }
+        else if($waktu_buka<=9){
+            $waktu_buka=$waktu_buka+0.2;
+        }
+        else if($waktu_buka<=10){
+            $waktu_buka=$waktu_buka+0.6;
+        }
+        else if($waktu_buka<=11){
+            $waktu_buka=$waktu_buka+0.8;
+        }
+        else if($waktu_buka<=22){
+            $waktu_buka=$waktu_buka+1;
+        }
+        else if($waktu_buka>22){
+            $waktu_buka=$waktu_buka+1.6;
+        }
+
+        return $waktu_buka;
+    }
+
     public static function process_mv_1(){
         //variable
         $pupuk=$req['berat_rabuk']; #gram pupuk yang akan dikonversi ke cair
@@ -755,6 +779,107 @@ class GeneralHelper{
 
         return [
             'status'        =>$status
+        ];
+    }
+
+    public static function process_mv_rabuk($type="urea", $options){
+        Endian::$defaultEndian=Endian::BIG_ENDIAN;
+
+        //options params
+        // $options=[
+        //     'modbus_url',
+        //     'modbus_port',
+        //     'sensor_active',
+        //     'modbus_url',
+        //     'berat_rabuk',
+        // ];
+
+
+        //-----------------------------
+
+        //variable
+        //iot control modbus
+        $list=[
+            'modbus_url'    =>$options['modbus_url'],
+            'modbus_port'   =>$options['modbus_port'],
+            'name'          =>$options['name'],
+            'sensor_selected'   =>$options['sensor_selected'],
+            'address'       =>$options['address'],
+            'waktu_buka'    =>$options['waktu_buka']
+        ];
+
+        //kondisi
+        if(!$list['sensor_selected']){
+            return [
+                'status'        =>"sensor_not_selected",
+                'name'          =>$list['name'],
+                'waktu_tunggu'  =>"",
+                'waktu_tunggu_simulasi' =>""
+            ];
+        }
+
+        //waktu buka
+        $waktu_buka=$list['waktu_buka'];
+
+        //process
+        $connection=BinaryStreamConnection::getBuilder()
+            ->setPort($list['modbus_port'])
+            ->setHost($list['modbus_url'])
+            ->setConnectTimeoutSec(5)
+            ->setWriteTimeoutSec(30)
+            ->setReadTimeoutSec(30)
+            ->build();
+
+        $type=substr($list['address'], 0, 1);
+        $startAddress=(int)(substr($list['address'], 1));
+        $startAddress=$startAddress-1;
+        $unitID=1;
+
+        $status="error";
+        if($type=="4"){
+            $registers=[Types::toReal(1)];
+            $packet=new WriteMultipleRegistersRequest($startAddress, $registers, $unitID);
+
+            $registers2=[Types::toReal(0)];
+            $packet2=new WriteMultipleRegistersRequest($startAddress, $registers2, $unitID);
+        }
+        else{
+            $coil=true;
+            $packet=new WriteSingleCoilRequest($startAddress, $coil, $unitID);
+
+            $coil2=false;
+            $packet2=new WriteSingleCoilRequest($startAddress, $coil2, $unitID);
+        }
+
+        $waktu_eksekusi="";
+        try {
+            $binaryData = $connection->connect();
+            $sleep=ceil($waktu_buka*1000*1000);
+
+            $result=$binaryData->sendAndReceive($packet);
+            $date_1=microtime(true)/1000;
+            usleep($sleep); //sleep
+
+            $result=$binaryData->sendAndReceive($packet2);
+            $date_2=microtime(true)/1000;
+
+            $waktu_eksekusi=($date_2-$date_1)*1000;
+            $status="success";
+        }
+        catch(\Exception $exception) {
+            // echo 'An exception occurred'."<br/>";
+            // echo $exception->getMessage()."<br/>";
+            // echo $exception->getTraceAsString()."<br/>";
+        }
+        finally{
+            $connection->close();
+        }
+
+        return [
+            'status'        =>$status,
+            'name'          =>$list['name'],
+            'waktu_tunggu'  =>$waktu_buka,
+            'waktu_tunggu_simulasi' =>$waktu_eksekusi
         ];
     }
 }

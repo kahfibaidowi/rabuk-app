@@ -47,16 +47,68 @@ class PupukController extends Controller
         }
 
         //SUCCESS
-        $data_urea=null;
         DB::transaction(function()use($req, &$data_urea){
             $lahan=LahanRepo::get($req['lahan_id']);
 
-            // //dinonaktifkan sementara
-            // if($req['dosis_urea']!=""){
-            //     $process_rabuk=GeneralHelper::process_mv("urea", $req['dosis_urea'], $lahan);
-            //     $data_urea=$process_rabuk;
-            // }
+            //dinonaktifkan sementara
+            $total_buka=0;
+            $options_valve_urea=[
+                'modbus_url'    =>$lahan['modbus_url'],
+                'modbus_port'   =>$lahan['modbus_port'],
+                'name'          =>"valve_urea",
+                'sensor_selected'   =>false,
+                'address'       =>"40029",
+                'waktu_buka'    =>0
+            ];
+            $options_valve_mkp=[
+                'modbus_url'    =>$lahan['modbus_url'],
+                'modbus_port'   =>$lahan['modbus_port'],
+                'name'          =>"valve_mkp",
+                'sensor_selected'   =>false,
+                'address'       =>"40031",
+                'waktu_buka'    =>0
+            ];
+            $options_valve_irigasi=[
+                'modbus_url'    =>$lahan['modbus_url'],
+                'modbus_port'   =>$lahan['modbus_port'],
+                'name'          =>"valve_irigasi",
+                'sensor_selected'   =>true,
+                'address'       =>"40033",
+                'waktu_buka'    =>0
+            ];
 
+            if($req['dosis_urea']!=""){
+                $volume_rabuk_urea=($req['dosis_urea']/$lahan['urea_per_liter'])*1000;
+                $waktu_buka_urea=GeneralHelper::valve_volume_to_time($volume_rabuk_urea);
+
+                $options_valve_urea['sensor_selected']=true;
+                $options_valve_urea['waktu_buka']=$waktu_buka_urea;
+                $total_buka+=$waktu_buka_urea;
+            }
+            if($req['dosis_mkp']!=""){
+                $volume_rabuk_mkp=($req['dosis_mkp']/$lahan['mkp_per_liter'])*1000;
+                $waktu_buka_mkp=GeneralHelper::valve_volume_to_time($volume_rabuk_mkp);
+
+                $options_valve_mkp['sensor_selected']=true;
+                $options_valve_mkp['waktu_buka']=$waktu_buka_mkp;
+                $total_buka+=$waktu_buka_mkp;
+            }
+
+            $options_valve_irigasi['waktu_buka']=$total_buka/2;
+
+            $process_irigasi_before=GeneralHelper::process_mv_rabuk("irigasi", $options_valve_irigasi);
+            $data_irigasi_before=$process_irigasi_before;
+            
+            $process_rabuk_urea=GeneralHelper::process_mv_rabuk("urea", $options_valve_urea);
+            $data_urea=$process_rabuk_urea;
+            
+            $process_rabuk_mkp=GeneralHelper::process_mv_rabuk("mkp", $options_valve_mkp);
+            $data_mkp=$process_rabuk_mkp;
+            
+            $process_irigasi_after=GeneralHelper::process_mv_rabuk("irigasi", $options_valve_irigasi);
+            $data_irigasi_after=$process_irigasi_after;
+
+            //insert
             PupukModel::create([
                 'lahan_id'      =>$req['lahan_id'],
                 'usia_tanaman'  =>$req['usia_tanaman'],
@@ -67,8 +119,7 @@ class PupukController extends Controller
         });
 
         return response()->json([
-            'status'=>"ok",
-            'simulated'=>$data_urea
+            'status'=>"ok"
         ]);
     }
 

@@ -137,10 +137,8 @@ export default function Page(props) {
                                     icon:yup.string().required(),
                                     modbus_url:yup.string().required(),
                                     modbus_port:yup.string().required(),
-                                    urea_gram:yup.string().required(),
-                                    urea_v_liter:yup.string().required(),
-                                    mkp_gram:yup.string().required(),
-                                    mkp_v_liter:yup.string().required()
+                                    urea_per_liter:yup.string().required(),
+                                    mkp_per_liter:yup.string().required()
                                 })
                             }
                             enableReinitialize
@@ -245,10 +243,10 @@ export default function Page(props) {
                                         />
                                     </div>
                                     <div className="grid grid-cols-4 items-center gap-4">
-                                        <Label>Urea gram</Label>
+                                        <Label>Konsentrasi(Urea) per 1 liter</Label>
                                         <NumericFormat 
-                                            value={formik.values.urea_gram} 
-                                            onValueChange={(values)=>formik.setFieldValue("urea_gram", values.value)}
+                                            value={formik.values.urea_per_liter} 
+                                            onValueChange={(values)=>formik.setFieldValue("urea_per_liter", values.value)}
                                             customInput={Input} 
                                             thousandSeparator 
                                             className="pr-10 w-full col-span-3" 
@@ -256,32 +254,10 @@ export default function Page(props) {
                                         />
                                     </div>
                                     <div className="grid grid-cols-4 items-center gap-4">
-                                        <Label>Urea volume/liter</Label>
+                                        <Label>Konsentrasi(MKP) per 1 liter</Label>
                                         <NumericFormat 
-                                            value={formik.values.urea_v_liter} 
-                                            onValueChange={(values)=>formik.setFieldValue("urea_v_liter", values.value)}
-                                            customInput={Input} 
-                                            thousandSeparator 
-                                            className="pr-10 w-full col-span-3" 
-                                            decimalScale={0}
-                                        />
-                                    </div>
-                                    <div className="grid grid-cols-4 items-center gap-4">
-                                        <Label>MKP gram</Label>
-                                        <NumericFormat 
-                                            value={formik.values.mkp_gram} 
-                                            onValueChange={(values)=>formik.setFieldValue("mkp_gram", values.value)}
-                                            customInput={Input} 
-                                            thousandSeparator 
-                                            className="pr-10 w-full col-span-3" 
-                                            decimalScale={0}
-                                        />
-                                    </div>
-                                    <div className="grid grid-cols-4 items-center gap-4">
-                                        <Label>MKP volume/liter</Label>
-                                        <NumericFormat 
-                                            value={formik.values.mkp_v_liter} 
-                                            onValueChange={(values)=>formik.setFieldValue("mkp_v_liter", values.value)}
+                                            value={formik.values.mkp_per_liter} 
+                                            onValueChange={(values)=>formik.setFieldValue("mkp_per_liter", values.value)}
                                             customInput={Input} 
                                             thousandSeparator 
                                             className="pr-10 w-full col-span-3" 
