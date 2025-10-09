@@ -382,13 +382,13 @@ class GeneralHelper{
             $waktu_buka=$waktu_buka+0.6;
         }
         else if($waktu_buka<=11){
-            $waktu_buka=$waktu_buka+0.8
+            $waktu_buka=$waktu_buka+0.8;
         }
         else if($waktu_buka<=22){
             $waktu_buka=$waktu_buka+1;
         }
         else if($waktu_buka>22){
-            $waktu_buka=$waktu_buka+1.6
+            $waktu_buka=$waktu_buka+1.6;
         }
         // if($list['berat_rabuk']<=100){
         //     $waktu_buka=0.5;
@@ -611,18 +611,17 @@ class GeneralHelper{
             'modbus_port'   =>$options['modbus_port'],
             'name'          =>$options['name'],
             'sensor_selected'   =>$options['sensor_selected'],
-            'address'       =>$options['address'],
-            'address_irigasi'   =>$options['address_irigasi'],
-            'waktu_buka'    =>$options['waktu_buka']
+            'address_mv1'       =>$options['address_mv1'],
+            'waktu_buka_mv1'    =>$options['waktu_buka_mv1'],
+            'address_mv2'       =>$options['address_mv2'],
+            'waktu_buka_mv2'    =>$options['waktu_buka_mv2'],
+            'address_irigasi'   =>$options['address_irigasi']
         ];
 
         //kondisi
         if(!$list['sensor_selected']){
             return [
-                'status'        =>"sensor_not_selected",
-                'name'          =>$list['name'],
-                'waktu_tunggu'  =>"",
-                'waktu_tunggu_simulasi' =>""
+                'status'        =>"sensor_not_selected"
             ];
         }
 
@@ -634,17 +633,22 @@ class GeneralHelper{
             ->setReadTimeoutSec(30)
             ->build();
 
-        $type=substr($list['address'], 0, 1);
-        $startAddress=(int)(substr($list['address'], 1));
+        $type=substr($list['address_mv1'], 0, 1);
+        $startAddress=(int)(substr($list['address_mv1'], 1));
         $startAddress=$startAddress-1;
+
+        $type2=substr($list['address_mv2'], 0, 1);
+        $startAddress2=(int)(substr($list['address_mv2'], 1));
+        $startAddress2=$startAddress2-1;
 
         $type_irigasi=substr($list['address_irigasi'], 0, 1);
         $startAddress_irigasi=(int)(substr($list['address_irigasi'], 1));
         $startAddress_irigasi=$startAddress_irigasi-1;
 
         $unitID=1;
-        $waktu_buka=$list['waktu_buka'];
-        $waktu_buka_half=$list['waktu_buka']/2;
+        $waktu_buka=$list['waktu_buka_mv1'];
+        $waktu_buka_mv2=$list['waktu_buka_mv2'];
+        $waktu_buka_half=($list['waktu_buka_mv1']+$list['waktu_buka_mv2'])/2;
 
         if($type=="4"){
             $registers=[Types::toReal(1)];
@@ -659,6 +663,21 @@ class GeneralHelper{
 
             $packet=new WriteSingleCoilRequest($startAddress, $coil, $unitID);
             $packet2=new WriteSingleCoilRequest($startAddress, $coil2, $unitID);
+        }
+
+        if($type2=="4"){
+            $registers=[Types::toReal(1)];
+            $registers2=[Types::toReal(0)];
+
+            $packet_mv2=new WriteMultipleRegistersRequest($startAddress2, $registers, $unitID);
+            $packet2_mv2=new WriteMultipleRegistersRequest($startAddress2, $registers2, $unitID);
+        }
+        else{
+            $coil=true;
+            $coil2=false;
+
+            $packet_mv2=new WriteSingleCoilRequest($startAddress2, $coil, $unitID);
+            $packet2_mv2=new WriteSingleCoilRequest($startAddress2, $coil2, $unitID);
         }
 
         if($type_irigasi=="4"){
@@ -683,6 +702,7 @@ class GeneralHelper{
         try {
             $binaryData = $connection->connect();
             $sleep=ceil($waktu_buka*1000*1000);
+            $sleep_mv2=ceil($waktu_buka_mv2*1000*1000);
             $sleep_irigasi=ceil($waktu_buka_half*1000*1000);
 
             //step 1 (irigasi - sebelum pemupukan)
@@ -703,6 +723,15 @@ class GeneralHelper{
             $date_2=microtime(true)/1000;
             usleep(2*1000*1000);
 
+            //step 2 (pemupukan mv 2)
+            $result=$binaryData->sendAndReceive($packet_mv2);
+            $date_1=microtime(true)/1000;
+            usleep($sleep_mv2); //sleep
+
+            $result=$binaryData->sendAndReceive($packet2_mv2);
+            $date_2=microtime(true)/1000;
+            usleep(2*1000*1000);
+
             //step 3 (irigasi - sesudah pemupukan)
             $result=$binaryData->sendAndReceive($packet_irigasi);
             $date_1_sesudah_pemupukan=microtime(true)/1000;
@@ -713,9 +742,6 @@ class GeneralHelper{
             usleep(2*1000*1000);
 
             //hasil
-            $waktu_eksekusi=($date_2-$date_1)*1000;
-            $waktu_tunggu_sebelum_pemupukan=($date_2_sebelum_pemupukan-$date_1_sebelum_pemupukan)*1000;
-            $waktu_tunggu_sesudah_pemupukan=($date_2_sesudah_pemupukan-$date_1_sesudah_pemupukan)*1000;
             $status="success";
         }
         catch(\Exception $exception) {
@@ -728,11 +754,7 @@ class GeneralHelper{
         }
 
         return [
-            'status'        =>$status,
-            'name'          =>$list['name'],
-            'waktu_tunggu_simulasi' =>$waktu_eksekusi,
-            'waktu_tunggu_irigasi_sebelum_pemupukan_simulasi'   =>$waktu_tunggu_sebelum_pemupukan,
-            'waktu_tunggu_irigasi_sesudah_pemupukan_simulasi'   =>$waktu_tunggu_sesudah_pemupukan
+            'status'        =>$status
         ];
     }
 }

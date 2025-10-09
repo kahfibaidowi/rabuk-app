@@ -301,9 +301,11 @@ class PupukController extends Controller
             'modbus_port'   =>$req['modbus_port'],
             'name'          =>"valve_1",
             'sensor_selected'   =>true,
-            'address'       =>$req['address'],
-            'address_irigasi'   =>$req['address_irigasi'],
-            'waktu_buka'    =>$req['waktu_buka']
+            'address_mv1'       =>$req['address_mv1'],
+            'waktu_buka_mv1'    =>$req['waktu_buka_mv1'],
+            'address_mv2'       =>$req['address_mv2'],
+            'waktu_buka_mv2'    =>$req['waktu_buka_mv2'],
+            'address_irigasi'   =>$req['address_irigasi']
         ];
 
         //process

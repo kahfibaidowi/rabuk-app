@@ -83,9 +83,11 @@ export default function Page(props) {
     const [form_input, setFormInput]=useState({
         modbus_url:"127.0.0.1",
         modbus_port:"502",
-        address:"40029",
+        address_mv1:"40029",
+        waktu_buka_mv1:"",
+        address_mv2:"40031",
+        waktu_buka_mv2:"",
         address_irigasi:"40033",
-        waktu_buka:""
     })
     const [response, setResponse]=useState({
         status:"idle"
@@ -172,9 +174,11 @@ export default function Page(props) {
                                 yup.object().shape({
                                     modbus_url:yup.string().required(),
                                     modbus_port:yup.string().required(),
-                                    address:yup.string().required(),
-                                    address_irigasi:yup.string().required(),
-                                    waktu_buka:yup.string().required()
+                                    address_mv1:yup.string().required(),
+                                    waktu_buka_mv1:yup.string().required(),
+                                    address_mv2:yup.string().required(),
+                                    waktu_buka_mv2:yup.string().required(),
+                                    address_irigasi:yup.string().required()
                                 })
                             }
                             enableReinitialize
@@ -204,10 +208,10 @@ export default function Page(props) {
                                         />
                                     </div>
                                     <div className="grid grid-cols-5 items-center gap-2">
-                                        <Label className="col-span-2">Address MV(Pupuk)</Label>
+                                        <Label className="col-span-2">Address MV 1(Pupuk)</Label>
                                         <NumericFormat 
-                                            value={formik.values.address} 
-                                            onValueChange={(values)=>formik.setFieldValue("address", values.value)}
+                                            value={formik.values.address_mv1} 
+                                            onValueChange={(values)=>formik.setFieldValue("address_mv1", values.value)}
                                             customInput={Input} 
                                             thousandSeparator={false}
                                             className="col-span-3 mb-1" 
@@ -219,7 +223,44 @@ export default function Page(props) {
                                         />
                                     </div>
                                     <div className="grid grid-cols-5 items-center gap-2">
-                                        <Label className="col-span-2">Address MV(Irigasi)</Label>
+                                        <Label className="col-span-2">Waktu Buka MV 1(detik)</Label>
+                                        <NumericFormat 
+                                            value={formik.values.waktu_buka_mv1} 
+                                            onValueChange={(values)=>formik.setFieldValue("waktu_buka_mv1", values.value)}
+                                            customInput={Input} 
+                                            thousandSeparator 
+                                            className="pr-10 w-full col-span-3" 
+                                            decimalScale={1}
+                                        />
+                                    </div>
+                                    <div className="grid grid-cols-5 items-center gap-2">
+                                        <Label className="col-span-2">Address MV 2(Pupuk)</Label>
+                                        <NumericFormat 
+                                            value={formik.values.address_mv2} 
+                                            onValueChange={(values)=>formik.setFieldValue("address_mv2", values.value)}
+                                            customInput={Input} 
+                                            thousandSeparator={false}
+                                            className="col-span-3 mb-1" 
+                                            decimalScale={0}
+                                            allowNegative={false}
+                                            allowLeadingZeros
+                                            maxLength={5}
+                                            placeholder="Modbus Address | 400XX"
+                                        />
+                                    </div>
+                                    <div className="grid grid-cols-5 items-center gap-2">
+                                        <Label className="col-span-2">Waktu Buka MV 2(detik)</Label>
+                                        <NumericFormat 
+                                            value={formik.values.waktu_buka_mv2} 
+                                            onValueChange={(values)=>formik.setFieldValue("waktu_buka_mv2", values.value)}
+                                            customInput={Input} 
+                                            thousandSeparator 
+                                            className="pr-10 w-full col-span-3" 
+                                            decimalScale={1}
+                                        />
+                                    </div>
+                                    <div className="grid grid-cols-5 items-center gap-2">
+                                        <Label className="col-span-2">Address(Irigasi)</Label>
                                         <NumericFormat 
                                             value={formik.values.address_irigasi} 
                                             onValueChange={(values)=>formik.setFieldValue("address_irigasi", values.value)}
@@ -231,17 +272,6 @@ export default function Page(props) {
                                             allowLeadingZeros
                                             maxLength={5}
                                             placeholder="Modbus Address | 400XX"
-                                        />
-                                    </div>
-                                    <div className="grid grid-cols-5 items-center gap-2">
-                                        <Label className="col-span-2">Waktu (detik)</Label>
-                                        <NumericFormat 
-                                            value={formik.values.waktu_buka} 
-                                            onValueChange={(values)=>formik.setFieldValue("waktu_buka", values.value)}
-                                            customInput={Input} 
-                                            thousandSeparator 
-                                            className="pr-10 w-full col-span-3" 
-                                            decimalScale={1}
                                         />
                                     </div>
                                     <div className="grid grid-cols-5 items-start gap-2 mt-5">
@@ -262,10 +292,7 @@ export default function Page(props) {
                             <span className="text-base font-bold">Response :</span>
                             {response.status=="success"&&
                                 <pre className="mt-2">
-                                    Name : {response.name}{'\n'}
-                                    Waktu Tunggu (Simulasi) : {response.waktu_tunggu_simulasi}{'\n'}
-                                    Waktu Tunggu Irigasi Sebelum Pemupukan (Simulasi) : {response.waktu_tunggu_irigasi_sebelum_pemupukan_simulasi}{'\n'}
-                                    Waktu Tunggu Irigasi Sesudah Pemupukan (Simulasi) : {response.waktu_tunggu_irigasi_sesudah_pemupukan_simulasi}{'\n'}
+                                    Success
                                 </pre>
                             }
                         </div>
