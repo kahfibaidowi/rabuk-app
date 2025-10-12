@@ -485,8 +485,8 @@ class GeneralHelper{
             $binaryData = $connection->connect();
             $sleep=ceil($waktu_buka*1000*1000);
 
-            $result=$binaryData->sendAndReceive($packet);
             $date_1=microtime(true)/1000;
+            $result=$binaryData->sendAndReceive($packet);
             usleep($sleep); //sleep
 
             $result=$binaryData->sendAndReceive($packet2);

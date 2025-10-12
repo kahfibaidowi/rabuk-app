@@ -116,7 +116,8 @@ export default function Page(props) {
     const options_modbus_url=()=>{
         const default_data=[
             {label:"127.0.0.1", value:"127.0.0.1"},
-            {label:"10.10.1.2", value:"10.10.1.2"}
+            {label:"10.10.1.2", value:"10.10.1.2"},
+            {label:"192.168.1.101", value:"192.168.1.101"}
         ]
 
         return default_data
