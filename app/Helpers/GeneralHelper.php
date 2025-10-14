@@ -395,25 +395,27 @@ class GeneralHelper{
         }
 
         //waktu buka
-        $waktu_buka=$list['berat_rabuk']/100*0.4;
+        $penambahan=floor($list['berat_rabuk']/200);
+        $ml_step=90-($penambahan*1.5);
+        $waktu_buka=$list['berat_rabuk']/$ml_step*0.4;
         if($waktu_buka<=4){
             $waktu_buka=$waktu_buka+0;
         }
-        else if($waktu_buka<=9){
-            $waktu_buka=$waktu_buka+0.2;
-        }
-        else if($waktu_buka<=10){
-            $waktu_buka=$waktu_buka+0.6;
-        }
-        else if($waktu_buka<=11){
-            $waktu_buka=$waktu_buka+0.8;
-        }
-        else if($waktu_buka<=22){
-            $waktu_buka=$waktu_buka+1;
-        }
-        else if($waktu_buka>22){
-            $waktu_buka=$waktu_buka+1.6;
-        }
+        // else if($waktu_buka<=9){
+        //     $waktu_buka=$waktu_buka+0.2;
+        // }
+        // else if($waktu_buka<=10){
+        //     $waktu_buka=$waktu_buka+0.6;
+        // }
+        // else if($waktu_buka<=11){
+        //     $waktu_buka=$waktu_buka+0.8;
+        // }
+        // else if($waktu_buka<=22){
+        //     $waktu_buka=$waktu_buka+1;
+        // }
+        // else if($waktu_buka>22){
+        //     $waktu_buka=$waktu_buka+1.6;
+        // }
         // if($list['berat_rabuk']<=100){
         //     $waktu_buka=0.5;
         // }

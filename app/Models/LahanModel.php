@@ -25,11 +25,7 @@ class LahanModel extends Model
        "jenis_tanaman",
        "tgl_tanam",
        "icon",
-       "modbus_url",
-       "modbus_port",
-       "modbus_status",
-       "urea_per_liter",
-       "mkp_per_liter"
+       "modbus_status"
     ];
    
    

@@ -159,6 +159,15 @@ const ListTanaman=(props)=>{
             toast.error("Remove Data Failed!", {position:"bottom-center"})
         }
     })
+    const update_status_data=useMutation({
+        mutationFn:(params)=>lahan_request.update_status(params.id, params),
+        onSuccess:data=>{
+            queryClient.refetchQueries("gets_lahan")
+        },
+        onError:err=>{
+            toast.error("Update Data Failed!", {position:"bottom-center"})
+        }
+    })
 
     return (
         <>
@@ -195,6 +204,7 @@ const ListTanaman=(props)=>{
                                 }
                             })
                         }}
+                        updateStatusActions={(params)=>update_status_data.mutate(params)}
                     />
                 )}
             />

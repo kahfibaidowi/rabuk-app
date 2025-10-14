@@ -23,11 +23,7 @@ return new class extends Migration
             $table->string("jenis_tanaman");
             $table->date("tgl_tanam");
             $table->text("icon");
-            $table->string("modbus_url");
-            $table->string("modbus_port");
             $table->string("modbus_status")->default("disconnected");
-            $table->unsignedInteger("urea_per_liter");
-            $table->unsignedInteger("mkp_per_liter");
             $table->timestamps();
         });
 

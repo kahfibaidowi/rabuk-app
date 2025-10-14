@@ -117,4 +117,11 @@ class DashboardController extends Controller
             'lahan_id'  =>isset($req['lahan_id'])?trim($req['lahan_id']):""
         ]);
     }
+
+    public function pengaturan(Request $request)
+    {
+        return Inertia::render('pengaturan/index', [
+            'lahan_id'  =>isset($req['lahan_id'])?trim($req['lahan_id']):""
+        ]);
+    }
 }

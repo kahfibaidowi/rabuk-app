@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\User;
+use App\Models\PengaturanModel;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -16,13 +17,21 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        User::factory()->create([
-            'name'      => 'Admin 0',
-            'login_type'=>"user_pass",
-            'role'      =>"admin",
-            'email'     =>'admin@example.com',
-            'password'  =>Hash::make("admin"),
-            'avatar_url'=>""
+        PengaturanModel::create([
+            'label' =>"modbus_url",
+            'value' =>"127.0.0.1"
+        ]);
+        PengaturanModel::create([
+            'label' =>"modbus_port",
+            'value' =>"502"
+        ]);
+        PengaturanModel::create([
+            'label' =>"urea_per_liter",
+            'value' =>"10"
+        ]);
+        PengaturanModel::create([
+            'label' =>"mkp_per_liter",
+            'value' =>"10"
         ]);
     }
 }

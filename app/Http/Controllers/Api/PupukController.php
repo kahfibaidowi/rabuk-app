@@ -17,6 +17,7 @@ use ModbusTcpClient\Utils\Types;
 use App\Repository\PupukRepo;
 use App\Repository\LahanRepo;
 use App\Models\PupukModel;
+use App\Models\PengaturanModel;
 
 class PupukController extends Controller
 {
@@ -49,28 +50,29 @@ class PupukController extends Controller
         //SUCCESS
         DB::transaction(function()use($req, &$data_urea){
             $lahan=LahanRepo::get($req['lahan_id']);
+            $pengaturan=PengaturanRepo::get();
 
             //dinonaktifkan sementara
             $total_buka=0;
             $options_valve_urea=[
-                'modbus_url'    =>$lahan['modbus_url'],
-                'modbus_port'   =>$lahan['modbus_port'],
+                'modbus_url'    =>$pengaturan['modbus_url'],
+                'modbus_port'   =>$pengaturan['modbus_port'],
                 'name'          =>"valve_urea",
                 'sensor_selected'   =>false,
                 'address'       =>"40029",
                 'waktu_buka'    =>0
             ];
             $options_valve_mkp=[
-                'modbus_url'    =>$lahan['modbus_url'],
-                'modbus_port'   =>$lahan['modbus_port'],
+                'modbus_url'    =>$pengaturan['modbus_url'],
+                'modbus_port'   =>$pengaturan['modbus_port'],
                 'name'          =>"valve_mkp",
                 'sensor_selected'   =>false,
                 'address'       =>"40031",
                 'waktu_buka'    =>0
             ];
             $options_valve_irigasi=[
-                'modbus_url'    =>$lahan['modbus_url'],
-                'modbus_port'   =>$lahan['modbus_port'],
+                'modbus_url'    =>$pengaturan['modbus_url'],
+                'modbus_port'   =>$pengaturan['modbus_port'],
                 'name'          =>"valve_irigasi",
                 'sensor_selected'   =>true,
                 'address'       =>"40033",

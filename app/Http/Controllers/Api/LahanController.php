@@ -34,11 +34,7 @@ class LahanController extends Controller
             'jumlah_tanaman'=>"required|integer|min:0",
             'jenis_tanaman' =>"required",
             'tgl_tanam'     =>"required|date_format:Y-m-d",
-            'icon'          =>"required",
-            'modbus_url'    =>"required",
-            'modbus_port'   =>"required",
-            'urea_per_liter'=>"required|integer|min:0",
-            'mkp_per_liter' =>"required|integer|min:0"
+            'icon'          =>"required"
         ]);
         if($validation->fails()){
             return response()->json([
@@ -59,11 +55,7 @@ class LahanController extends Controller
                 'jumlah_tanaman'=>$req['jumlah_tanaman'],
                 'jenis_tanaman' =>$req['jenis_tanaman'],
                 'tgl_tanam'     =>$req['tgl_tanam'],
-                'icon'          =>$req['icon'],
-                'modbus_url'    =>$req['modbus_url'],
-                'modbus_port'   =>$req['modbus_port'],
-                'urea_per_liter'=>$req['urea_per_liter'],
-                'mkp_per_liter' =>$req['mkp_per_liter']
+                'icon'          =>$req['icon']
             ]);
         });
 
@@ -92,11 +84,7 @@ class LahanController extends Controller
             'nama_lahan'    =>"required",
             'pemilik'       =>"required",
             'jumlah_tanaman'=>"required|integer|min:0",
-            'icon'          =>"required",
-            'modbus_url'    =>"required",
-            'modbus_port'   =>"required",
-            'urea_per_liter'=>"required|integer|min:0",
-            'mkp_per_liter' =>"required|integer|min:0"
+            'icon'          =>"required"
         ]);
         if($validation->fails()){
             return response()->json([
@@ -111,11 +99,7 @@ class LahanController extends Controller
                 'nama_lahan'    =>$req['nama_lahan'],
                 'pemilik'       =>$req['pemilik'],
                 'jumlah_tanaman'=>$req['jumlah_tanaman'],
-                'icon'          =>$req['icon'],
-                'modbus_url'    =>$req['modbus_url'],
-                'modbus_port'   =>$req['modbus_port'],
-                'urea_per_liter'=>$req['urea_per_liter'],
-                'mkp_per_liter' =>$req['mkp_per_liter']
+                'icon'          =>$req['icon']
             ];
 
             LahanModel::where("id", $req['id'])
@@ -227,6 +211,43 @@ class LahanController extends Controller
             'last_page'     =>$data['last_page'],
             'total'         =>$data['total'],
             'data'          =>$data['data']
+        ]);
+    }
+
+    public function update_status(Request $request, $id)
+    {
+        // $login_data=$request['__data_user'];
+        $req=$request->all();
+
+        // //ROLE AUTHENTICATION
+        // if(!in_array($login_data['role'], ['admin'])){
+        //     return response('Not Allowed.', 403);
+        // }
+
+        //VALIDATION
+        $req['id']=$id;
+        $validation=Validator::make($req, [
+            'id' =>[
+                "required",
+                Rule::exists("App\Models\LahanModel")
+            ],
+            'modbus_status' =>"required"
+        ]);
+        if($validation->fails()){
+            return response()->json([
+                'error' =>"VALIDATION_ERROR",
+                'data'  =>$validation->errors()->first()
+            ], 400);
+        }
+
+        //SUCCESS
+        DB::transaction(function()use($req){
+            LahanModel::query()->update(['modbus_status'=>"disconnected"]);
+            LahanModel::where("id", $req['id'])->update(['modbus_status'=>$req['modbus_status']]);
+        });
+
+        return response()->json([
+            'status'=>"ok"
         ]);
     }
 }

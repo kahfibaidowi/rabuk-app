@@ -18,6 +18,7 @@ use ModbusTcpClient\Utils\Endian;
 use ModbusTcpClient\Utils\Types;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\PengaturanController;
 
 
 //AUTH ROUTE
@@ -43,6 +44,7 @@ Route::get('/simulate_time', [DashboardController::class, 'simulate_time']);
 Route::get('/simulate_weight', [DashboardController::class, 'simulate_weight']);
 Route::get('/simulate_step', [DashboardController::class, 'simulate_step']);
 Route::get('/simulate_irigasi', [DashboardController::class, 'simulate_irigasi']);
+Route::get('/pengaturan', [DashboardController::class, 'pengaturan']);
 
 //API ROUTE
 Route::middleware(["api"])->prefix("/api")->group(base_path('routes/api.php'));

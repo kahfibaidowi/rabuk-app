@@ -29,6 +29,7 @@ import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { Link } from '@inertiajs/react'
 import { Badge } from './ui/badge'
+import { Switch } from './ui/switch'
 
 const WidgetTanaman=(props)=>{
 
@@ -110,13 +111,16 @@ const WidgetTanaman=(props)=>{
                         </div>
                     </div>
                     <div className="flex mt-8">
-                        <Link 
-                            href={`/?lahan_id=${props.data.id}`}
-                            className="text-base flex items-center text-gray-500"
-                        >
-                            More Detail
-                            <ArrowRight size="17" className="ml-1"/>
-                        </Link>
+                        <div className="flex items-center mb-1">
+                            <Switch
+                                checked={props.data.modbus_status=="connected"}
+                                onCheckedChange={()=>{
+                                    const status=props.data.modbus_status=="connected"?"disconnected":"connected"
+                                    props.updateStatusActions({id:props.data.id, modbus_status:status})
+                                }}
+                            />
+                            <span className="ml-2 text-sm text-gray-500">Aktifkan Lahan</span>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -15,8 +15,10 @@ use ModbusTcpClient\Packet\ResponseFactory;
 use ModbusTcpClient\Utils\Endian;
 use App\Helpers\GeneralHelper;
 use App\Repository\LahanRepo;
+use App\Repository\PengaturanRepo;
 use App\Models\LahanModel;
 use App\Models\LahanDetailModel;
+use App\Models\PengaturanModel;
 
 Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
@@ -28,12 +30,13 @@ Schedule::call(function (){
 
     $ews_url=env("EWS_URL", "localhost");
 
-    $lahans=LahanRepo::gets([])['data'];
+    $lahans=LahanRepo::gets(['modbus_status'=>"connected"])['data'];
+    $pengaturan=PengaturanRepo::get();
     
     foreach($lahans as $list){
         $connection=BinaryStreamConnection::getBuilder()
-            ->setPort($list['modbus_port'])
-            ->setHost($list['modbus_url'])
+            ->setPort($pengaturan['modbus_port'])
+            ->setHost($pengaturan['modbus_url'])
             ->setConnectTimeoutSec(5)
             ->setWriteTimeoutSec(30)
             ->setReadTimeoutSec(30)

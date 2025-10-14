@@ -80,6 +80,9 @@ export const lahan_request={
     },
     update:async(id, params)=>{
         return await axios.put(`/api/lahan/${id}`, params).then(res=>res.data)
+    },
+    update_status:async(id, params)=>{
+        return await axios.put(`/api/lahan/actions/update_status/${id}`, params).then(res=>res.data)
     }
 }
 
@@ -142,5 +145,15 @@ export const pupuk_request={
     },
     simulate_irigasi:async(params)=>{
         return await axios.post("/api/pupuk/simulate_irigasi", params).then(res=>res.data)
+    }
+}
+
+//PENGATURAN
+export const pengaturan_request={
+    get:async()=>{
+        return await axios.get(`/api/pengaturan`).then(res=>res.data)
+    },
+    update:async(params)=>{
+        return await axios.put(`/api/pengaturan`, params).then(res=>res.data)
     }
 }

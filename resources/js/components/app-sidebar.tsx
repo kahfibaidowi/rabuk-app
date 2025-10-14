@@ -14,6 +14,7 @@ import {
   PieChart,
   Plus,
   PlusSquare,
+  Settings,
   Settings2,
   Sprout,
   SquareTerminal,
@@ -68,6 +69,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           title: "Tambah Lahan",
           url: "/lahan/add",
           icon: PlusSquare
+      },
+      {
+          title: "Pengaturan",
+          url: "/pengaturan",
+          icon: Settings
       },
       // {
       //     title: "Periksa Tanaman",

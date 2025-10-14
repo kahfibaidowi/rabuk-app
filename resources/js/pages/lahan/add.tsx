@@ -94,11 +94,7 @@ export default function Page(props) {
         jumlah_tanaman:"",
         jenis_tanaman:"salak",
         tgl_tanam:null,
-        icon:"",
-        modbus_url:"",
-        modbus_port:"",
-        urea_per_liter:"",
-        mkp_per_liter:""
+        icon:""
     })
     const [provinces, setProvinces]=useState([])
     const [regencies, setRegencies]=useState([])
@@ -216,11 +212,7 @@ export default function Page(props) {
                                     jumlah_tanaman:yup.string().required(),
                                     jenis_tanaman:yup.string().required(),
                                     tgl_tanam:yup.string().required(),
-                                    icon:yup.string().required(),
-                                    modbus_url:yup.string().required(),
-                                    modbus_port:yup.string().required(),
-                                    urea_per_liter:yup.string().required(),
-                                    mkp_per_liter:yup.string().required()
+                                    icon:yup.string().required()
                                 })
                             }
                             enableReinitialize
@@ -389,50 +381,6 @@ export default function Page(props) {
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div className="grid grid-cols-4 items-center gap-4">
-                                        <Label>Modbus URL</Label>
-                                        <Input
-                                            placeholder="127.0.0.1"
-                                            className="col-span-3"
-                                            name="modbus_url"
-                                            value={formik.values.modbus_url}
-                                            onChange={formik.handleChange}
-                                            maxLength={200}
-                                        />
-                                    </div>
-                                    <div className="grid grid-cols-4 items-center gap-4">
-                                        <Label>Modbus PORT</Label>
-                                        <Input
-                                            placeholder="502"
-                                            className="col-span-3"
-                                            name="modbus_port"
-                                            value={formik.values.modbus_port}
-                                            onChange={formik.handleChange}
-                                            maxLength={200}
-                                        />
-                                    </div>
-                                    <div className="grid grid-cols-4 items-center gap-4">
-                                        <Label>Konsentrasi(Urea) per 1 liter</Label>
-                                        <NumericFormat 
-                                            value={formik.values.urea_per_liter} 
-                                            onValueChange={(values)=>formik.setFieldValue("urea_per_liter", values.value)}
-                                            customInput={Input} 
-                                            thousandSeparator 
-                                            className="pr-10 w-full col-span-3" 
-                                            decimalScale={0}
-                                        />
-                                    </div>
-                                    <div className="grid grid-cols-4 items-center gap-4">
-                                        <Label>Konsentrasi(MKP) per 1 liter</Label>
-                                        <NumericFormat 
-                                            value={formik.values.mkp_per_liter} 
-                                            onValueChange={(values)=>formik.setFieldValue("mkp_per_liter", values.value)}
-                                            customInput={Input} 
-                                            thousandSeparator 
-                                            className="pr-10 w-full col-span-3" 
-                                            decimalScale={0}
-                                        />
                                     </div>
                                     <div className="grid grid-cols-4 items-center gap-4 mt-10">
                                         <Label></Label>
